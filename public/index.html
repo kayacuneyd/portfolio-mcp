@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Portfolio - AI destekli portföy asistanı">
+    <title>Interactive Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.1"/>
+                    <path d="M8 12h16v2H8v-2zm0 4h12v2H8v-2zm0 4h8v2H8v-2z" fill="currentColor"/>
+                </svg>
+                <span>Interactive Portfolio</span>
+            </div>
+        </header>
+
+        <!-- Profile Card -->
+        <div class="profile-card" id="profileCard">
+            <div class="avatar">
+                <img id="profileImage" src="" alt="Profile" style="display: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                <div class="avatar-placeholder" id="avatarPlaceholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h2 id="profileName">Yükleniyor...</h2>
+                <p id="profileTitle">Portföy asistanı başlatılıyor</p>
+            </div>
+        </div>
+
+        <!-- Suggested Commands -->
+        <div class="suggested-commands" id="suggestedCommands">
+            <div class="commands-scroll">
+                <!-- Commands will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-container" id="messagesContainer">
+            <div class="message assistant">
+                <div class="message-content">
+                    Merhaba! Size nasıl yardımcı olabilirim? Aşağıdaki önerilen sorulardan birini seçebilir veya kendi sorunuzu yazabilirsiniz.
+                </div>
+                <div class="message-time" id="welcomeTime"></div>
+            </div>
+        </div>
+
+        <!-- Lead Form Modal -->
+        <div class="modal" id="leadModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>İletişim Bilgilerinizi Paylaşın</h3>
+                    <button class="modal-close" id="modalClose">&times;</button>
+                </div>
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="leadName">Adınız (İsteğe bağlı)</label>
+                        <input type="text" id="leadName" name="name" placeholder="Adınız">
+                    </div>
+                    <div class="form-group">
+                        <label for="leadEmail">E-posta Adresiniz *</label>
+                        <input type="email" id="leadEmail" name="email" required placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="leadTopic">Konu</label>
+                        <input type="text" id="leadTopic" name="topic" placeholder="Proje, randevu, teklif vb.">
+                    </div>
+                    <div class="form-group">
+                        <label for="leadMessage">Mesajınız</label>
+                        <textarea id="leadMessage" name="message" rows="3" placeholder="Projeniz hakkında detay verebilirsiniz..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Gönder</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Composer -->
+        <div class="composer" id="composer">
+            <div class="composer-inner">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Mesajınızı yazın..." 
+                    rows="1"
+                    maxlength="1000"></textarea>
+                <button id="sendButton" type="button" disabled>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18.3333 1.66669L9.16667 10.8334M18.3333 1.66669L12.5 18.3334L9.16667 10.8334M18.3333 1.66669L1.66667 7.50002L9.16667 10.8334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                <a href="#" id="privacyLink">KVKK/GDPR Bilgilendirmesi</a>
+            </p>
+            <div class="footer-credit">
+                <strong>Cüneyt Kaya</strong> tarafından yapıldı
+            </div>
+        </footer>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div class="modal" id="privacyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Gizlilik ve Veri Koruma</h3>
+                <button class="modal-close" id="privacyModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Veri Toplama:</strong> Bu platform, size daha iyi hizmet verebilmek için sadece gerekli bilgileri toplar.</p>
+                <p><strong>Kullanım:</strong> Toplanan veriler sadece size hizmet sunmak amacıyla kullanılır ve üçüncü taraflarla paylaşılmaz.</p>
+                <p><strong>Güvenlik:</strong> Verileriniz güvenli şekilde işlenir ve korunur.</p>
+                <p><strong>İletişim:</strong> Herhangi bir sorunuz için lütfen iletişime geçin.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
