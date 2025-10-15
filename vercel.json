@@ -20,10 +20,6 @@
       "dest": "public/$1"
     }
   ],
-  "env": {
-    "OPENAI_API_KEY": "@openai_api_key",
-    "MODEL_DEFAULT": "gpt-4o-mini",
-    "NODE_ENV": "production"
-  }
+  "env": {}
 }
 
