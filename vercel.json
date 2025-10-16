@@ -1,6 +1,5 @@
 {
   "version": 2,
-  // Configure Vercel deployment settings
   "builds": [
     {
       "src": "server/index.ts",
