@@ -338,5 +338,35 @@
                 document.head.appendChild(s);
             })();
         </script>
+            <script>
+                // Register service worker for offline caching (Workbox)
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js').then(reg => {
+                        console.log('Service worker registered:', reg.scope);
+
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New update available - notify user
+                                    const toast = document.createElement('div');
+                                    toast.textContent = 'Yeni sürüm hazır. Sayfayı yenileyin.';
+                                    toast.style.position = 'fixed';
+                                    toast.style.bottom = '100px';
+                                    toast.style.left = '50%';
+                                    toast.style.transform = 'translateX(-50%)';
+                                    toast.style.background = '#111827';
+                                    toast.style.color = '#fff';
+                                    toast.style.padding = '8px 12px';
+                                    toast.style.borderRadius = '8px';
+                                    toast.style.zIndex = '9999';
+                                    document.body.appendChild(toast);
+                                    setTimeout(() => toast.remove(), 8000);
+                                }
+                            });
+                        });
+                    }).catch(err => console.warn('SW registration failed:', err));
+                }
+            </script>
 </body>
 </html>
