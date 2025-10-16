@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "ts-node-dev --respawn server/index.ts",
     "build": "npx tsc",
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "clean": "rm -rf dist",
     "test:build": "npm run build && echo 'Build successful' && ls -la dist/",
-    "railway:start": "npm run build && node dist/index.js",
-    "postinstall": "npm run build"
+    "railway:start": "npm run build && node dist/index.js"
   },
   "keywords": ["portfolio", "ai", "chatbot", "interactive"],
   "author": "Cüneyt Kaya",

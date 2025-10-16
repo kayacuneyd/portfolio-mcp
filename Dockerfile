@@ -1,3 +1,25 @@
+# Stage 1: Build
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev)
+RUN npm ci
+
+# Copy the rest of the source code
+COPY . .
+
+# Run the build
+RUN npm run build
+
+# Prune dev dependencies for smaller final image
+RUN npm prune --production
+
+
+# Stage 2: Production
 FROM node:18-alpine
 
 WORKDIR /app
@@ -5,27 +27,13 @@ WORKDIR /app
 # Install curl for health check
 RUN apk add --no-cache curl
 
-# Package files
-COPY package*.json ./
-COPY tsconfig.json ./
-
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Install dev dependencies for build
-RUN npm install typescript ts-node-dev
-
-# Copy source
-COPY server/ ./server/
-COPY public/ ./public/
-COPY config/ ./config/
-COPY data/ ./data/
-
-# Build TypeScript
-RUN npm run build
-
-# Remove dev dependencies
-RUN npm prune --production
+# Copy pruned dependencies and build output from the builder stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/data ./data
 
 # Expose port
 EXPOSE 3000
