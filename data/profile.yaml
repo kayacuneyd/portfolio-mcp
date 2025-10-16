@@ -2,7 +2,7 @@ name: "Cüneyt Kaya"
 title: "Web Developer & Digital Solutions"
 location: "Stuttgart, Germany"
 languages: ["tr", "en", "de"]
-profile_image: "/profile-photo.jpg"  # public/ klasörüne fotoğrafınızı ekleyin
+profile_image: "https://kayacuneyt.com/assets/images/kayacuneyt.jpeg"  # public/ klasörüne fotoğrafınızı ekleyin
 
 services:
   - name: "Kişisel/kurumsal web sitesi"
