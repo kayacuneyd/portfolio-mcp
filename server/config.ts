@@ -2,6 +2,24 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { parse } from 'yaml';
 import { Profile, Theme } from './schema';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const sixtyDaysInSeconds = 5184000;
+
+export const helmetConfig = helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "script-src": ["'self'", "'unsafe-inline'"],
+    },
+  },
+  hsts: {
+    maxAge: sixtyDaysInSeconds,
+  },
+});
 
 // Cache for configuration files
 interface ConfigCache {
