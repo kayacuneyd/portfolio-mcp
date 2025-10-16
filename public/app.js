@@ -219,16 +219,19 @@ class InteractivePortfolio {
     async sendMessage() {
         const messageInput = document.getElementById('messageInput');
         const message = messageInput.value.trim();
+        const loadingIndicator = document.getElementById('loading-indicator');
         
         if (!message || this.isLoading) return;
 
-        // Clear input and disable send button
-        messageInput.value = '';
-        this.updateSendButton();
         this.isLoading = true;
+        this.updateSendButton();
+        loadingIndicator.style.display = 'flex';
+        this.announceToScreenReader('Yanıt bekleniyor...');
 
         // Add user message to UI
         this.addMessage('user', message);
+        messageInput.value = '';
+        autoResizeTextarea(); // Textarea'yı sıfırla
 
         try {
             const response = await fetch('/api/ask', {
@@ -258,25 +261,32 @@ class InteractivePortfolio {
 
         } catch (error) {
             console.error('Send message error:', error);
-            this.addMessage('assistant', 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.');
+            this.addMessage('assistant', 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.', { isError: true });
         } finally {
             this.isLoading = false;
             this.updateSendButton();
+            loadingIndicator.style.display = 'none';
         }
     }
 
-    addMessage(type, content) {
-        const messagesContainer = document.getElementById('messagesContainer');
+    addMessage(type, content, options = {}) {
+        const messageList = document.getElementById('message-list');
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
+        if (options.isError) {
+            messageDiv.classList.add('error');
+        }
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         
+        // Sanitize content before adding to prevent XSS
+        const sanitizedContent = this.escapeHtml(content);
+
         // Handle long messages with expand/collapse
-        if (content.length > 300) {
-            const shortContent = content.substring(0, 300) + '...';
-            const fullContent = content;
+        if (sanitizedContent.length > 300 && type === 'assistant') {
+            const shortContent = sanitizedContent.substring(0, 300) + '...';
+            const fullContent = sanitizedContent;
             
             const shortSpan = document.createElement('span');
             shortSpan.className = 'short-content';
@@ -300,7 +310,7 @@ class InteractivePortfolio {
             contentDiv.appendChild(fullSpan);
             contentDiv.appendChild(expandBtn);
         } else {
-            contentDiv.textContent = content;
+            contentDiv.innerHTML = sanitizedContent.replace(/\n/g, '<br>');
         }
 
         const timeDiv = document.createElement('div');
@@ -309,10 +319,10 @@ class InteractivePortfolio {
 
         messageDiv.appendChild(contentDiv);
         messageDiv.appendChild(timeDiv);
-        messagesContainer.appendChild(messageDiv);
+        messageList.appendChild(messageDiv);
 
         // Scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        messageList.scrollTop = messageList.scrollHeight;
     }
 
     openLeadModal(data = {}) {
@@ -386,7 +396,7 @@ class InteractivePortfolio {
     }
 
     showError(message) {
-        this.addMessage('assistant', `Hata: ${message}`);
+        this.addMessage('assistant', `Hata: ${message}`, { isError: true });
     }
 
     updateWelcomeTime() {
