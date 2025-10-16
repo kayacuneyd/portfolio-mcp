@@ -62,7 +62,7 @@ export async function askOpenAI(
     arguments: Record<string, any>;
   }>;
 }> {
-  const model = options.model || process.env.MODEL_DEFAULT || 'gpt-5-mini';
+  const model = options.model || process.env.MODEL_DEFAULT || 'gpt-4o-mini';
   
   // Build system message
   const systemMessage = buildSystemMessage(options.profile, options.faq);
