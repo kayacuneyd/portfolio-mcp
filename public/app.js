@@ -389,6 +389,23 @@ function initializeServiceCards() {
         const x = e.pageX - servicesScroll.offsetLeft;
         const walk = (x - startX) * 2;
         servicesScroll.scrollLeft = scrollLeft - walk;
+        
+        // Progress bar güncelleme
+        updateScrollProgress(servicesScroll);
+    });
+    
+    // Progress bar fonksiyonu
+    function updateScrollProgress(container) {
+        const progressBar = document.querySelector('.scroll-progress-bar');
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        const currentScroll = container.scrollLeft;
+        const progress = (currentScroll / maxScroll) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+    
+    // Scroll eventi için progress bar güncelleme
+    servicesScroll.addEventListener('scroll', () => {
+        updateScrollProgress(servicesScroll);
     });
 
     // Modal kapatma fonksiyonu
