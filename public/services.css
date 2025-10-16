@@ -146,12 +146,14 @@
     color: var(--accent-color);
     background: none;
     border: none;
-    padding: 0;
+    padding: 8px 0;
+    min-height: 44px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
     transition: all 0.3s ease;
+    touch-action: manipulation;
 }
 
 .service-button svg {

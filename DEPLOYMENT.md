@@ -112,7 +112,7 @@ cat .vercel/project.json
 ### Zorunlu:
 ```env
 OPENAI_API_KEY=sk-...
-MODEL_DEFAULT=gpt-4o-mini
+MODEL_DEFAULT=gpt-5-mini
 NODE_ENV=production
 ```
 

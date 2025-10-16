@@ -100,7 +100,7 @@ Google Sheets veya Zapier gibi servislere lead göndermek için:
 3. GitHub repository'nizi seçin: `portfolio-mcp`
 4. **Environment Variables** ekleyin:
    - `OPENAI_API_KEY`: OpenAI key'iniz
-   - `MODEL_DEFAULT`: `gpt-4o-mini`
+   - `MODEL_DEFAULT`: `gpt-5-mini`
    - `NODE_ENV`: `production`
    - (Opsiyonel) E-posta ayarları
 5. **Deploy** tıklayın

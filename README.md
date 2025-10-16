@@ -5,7 +5,7 @@ AI destekli, mobil-first, uyarlanabilir portföy şablonu. OpenAI ile entegre ch
 ## 🚀 Özellikler
 
 - **Mobil-First Tasarım**: 360-430px genişlikte optimize edilmiş arayüz
-- **AI Chatbot**: OpenAI GPT-4o-mini ile akıllı asistan
+- **AI Chatbot**: OpenAI GPT-5-mini ile akıllı asistan
 - **Lead Toplama**: Function calling ile otomatik lead oluşturma
 - **Uyarlanabilir İçerik**: YAML/JSON konfigürasyon dosyaları
 - **Çok Dilli Destek**: TR/EN/DE dil desteği
@@ -164,7 +164,7 @@ Chatbot ile etkileşim kurar.
 {
   "text": "Mesajınız",
   "lang": "tr",
-  "model": "gpt-4o-mini"
+  "model": "gpt-5-mini"
 }
 ```
 
