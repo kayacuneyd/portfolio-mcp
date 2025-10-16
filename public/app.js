@@ -302,38 +302,43 @@ class InteractivePortfolio {
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
-        
-        // Sanitize content before adding to prevent XSS
-        const sanitizedContent = this.escapeHtml(content);
 
-        // Handle long messages with expand/collapse
-        if (sanitizedContent.length > 300 && type === 'assistant') {
-            const shortContent = sanitizedContent.substring(0, 300) + '...';
-            const fullContent = sanitizedContent;
-            
-            const shortSpan = document.createElement('span');
-            shortSpan.className = 'short-content';
-            shortSpan.textContent = shortContent;
-            
-            const fullSpan = document.createElement('span');
-            fullSpan.className = 'full-content';
-            fullSpan.style.display = 'none';
-            fullSpan.textContent = fullContent;
-            
-            const expandBtn = document.createElement('button');
-            expandBtn.className = 'expand-btn';
-            expandBtn.textContent = 'Devamını göster';
-            expandBtn.onclick = function() {
-                shortSpan.style.display = 'none';
-                fullSpan.style.display = 'inline';
-                this.style.display = 'none';
-            };
-            
-            contentDiv.appendChild(shortSpan);
-            contentDiv.appendChild(fullSpan);
-            contentDiv.appendChild(expandBtn);
+        // Allow raw HTML when explicitly requested
+        if (options.raw) {
+            contentDiv.innerHTML = content;
         } else {
-            contentDiv.innerHTML = sanitizedContent.replace(/\n/g, '<br>');
+            // Sanitize content before adding to prevent XSS
+            const sanitizedContent = this.escapeHtml(String(content));
+
+            // Handle long messages with expand/collapse for assistant
+            if (sanitizedContent.length > 300 && type === 'assistant') {
+                const shortContent = sanitizedContent.substring(0, 300) + '...';
+                const fullContent = sanitizedContent;
+
+                const shortSpan = document.createElement('span');
+                shortSpan.className = 'short-content';
+                shortSpan.textContent = shortContent;
+
+                const fullSpan = document.createElement('span');
+                fullSpan.className = 'full-content';
+                fullSpan.style.display = 'none';
+                fullSpan.textContent = fullContent;
+
+                const expandBtn = document.createElement('button');
+                expandBtn.className = 'expand-btn';
+                expandBtn.textContent = 'Devamını göster';
+                expandBtn.onclick = function() {
+                    shortSpan.style.display = 'none';
+                    fullSpan.style.display = 'inline';
+                    this.style.display = 'none';
+                };
+
+                contentDiv.appendChild(shortSpan);
+                contentDiv.appendChild(fullSpan);
+                contentDiv.appendChild(expandBtn);
+            } else {
+                contentDiv.innerHTML = sanitizedContent.replace(/\n/g, '<br>');
+            }
         }
 
         const timeDiv = document.createElement('div');
@@ -346,6 +351,7 @@ class InteractivePortfolio {
 
         // Scroll to bottom smoothly but only if user is near bottom
         this.autoScrollToBottom(messageList);
+        return messageDiv;
     }
 
     autoScrollToBottom(container) {
@@ -458,6 +464,22 @@ class InteractivePortfolio {
             hour: '2-digit',
             minute: '2-digit'
         });
+    }
+
+    showTypingPlaceholder() {
+        const placeholderText = 'Yazıyor...';
+        // Use raw HTML so the dots animation can be rendered
+        const el = this.addMessage('assistant', `<span class="typing-dots"><span></span><span></span><span></span></span> ${placeholderText}`, { raw: true });
+        if (el) el.classList.add('typing');
+        return el;
+    }
+
+    removeTypingPlaceholder(el) {
+        try {
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+        } catch (e) {
+            console.error('Failed to remove typing placeholder', e);
+        }
     }
 
     escapeHtml(text) {
