@@ -57,7 +57,7 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    padding-bottom: 120px; /* Space for sticky composer */
+    padding-bottom: 180px; /* Increased space for footer and composer */
 }
 
 /* Header */
@@ -172,8 +172,9 @@ body {
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
-    max-height: calc(100vh - 400px);
-    min-height: 300px;
+    max-height: calc(100vh - 460px); /* Adjusted to account for footer */
+    min-height: 200px;
+    margin-bottom: 160px; /* Space for footer and composer */
 }
 
 .message {
@@ -426,17 +427,15 @@ body {
 
 /* Footer */
 .footer {
-    padding: 20px 16px;
+    padding: 16px;
     text-align: center;
     border-top: 1px solid var(--border-color);
     background-color: var(--bg-primary);
-    margin-top: auto;
     position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 88px; /* Position above composer */
+    left: 0;
+    right: 0;
     width: 100%;
-    max-width: 480px;
     z-index: 150;
 }
 
