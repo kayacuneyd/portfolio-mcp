@@ -454,10 +454,46 @@ function initializeServiceCards() {
     });
 }
 
+// Hazır sorular için yatay kaydırma işlevselliği
+function initializeCommandsScroll() {
+    const commandsScroll = document.querySelector('.commands-scroll');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    commandsScroll.addEventListener('mousedown', (e) => {
+        isDown = true;
+        commandsScroll.style.cursor = 'grabbing';
+        startX = e.pageX - commandsScroll.offsetLeft;
+        scrollLeft = commandsScroll.scrollLeft;
+    });
+
+    commandsScroll.addEventListener('mouseleave', () => {
+        isDown = false;
+        commandsScroll.style.cursor = 'grab';
+    });
+
+    commandsScroll.addEventListener('mouseup', () => {
+        isDown = false;
+        commandsScroll.style.cursor = 'grab';
+    });
+
+    commandsScroll.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - commandsScroll.offsetLeft;
+        const walk = (x - startX) * 2;
+        commandsScroll.scrollLeft = scrollLeft - walk;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize service cards
     initializeServiceCards();
     new InteractivePortfolio();
+    
+    // Initialize commands scroll
+    initializeCommandsScroll();
     
     // Setup textarea auto-resize
     const messageInput = document.getElementById('messageInput');
