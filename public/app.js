@@ -359,6 +359,38 @@ function initializeServiceCards() {
     const serviceModals = document.querySelectorAll('.service-modal');
     const modalCloseButtons = document.querySelectorAll('.service-modal-close');
 
+    // Yatay kaydırma işlevselliği
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    const servicesScroll = document.querySelector('.services-scroll');
+    
+    servicesScroll.addEventListener('mousedown', (e) => {
+        isDown = true;
+        servicesScroll.style.cursor = 'grabbing';
+        startX = e.pageX - servicesScroll.offsetLeft;
+        scrollLeft = servicesScroll.scrollLeft;
+    });
+
+    servicesScroll.addEventListener('mouseleave', () => {
+        isDown = false;
+        servicesScroll.style.cursor = 'grab';
+    });
+
+    servicesScroll.addEventListener('mouseup', () => {
+        isDown = false;
+        servicesScroll.style.cursor = 'grab';
+    });
+
+    servicesScroll.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - servicesScroll.offsetLeft;
+        const walk = (x - startX) * 2;
+        servicesScroll.scrollLeft = scrollLeft - walk;
+    });
+
     // Modal kapatma fonksiyonu
     function closeAllModals() {
         serviceModals.forEach(modal => modal.classList.remove('active'));
@@ -369,18 +401,16 @@ function initializeServiceCards() {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const card = this.closest('.service-card');
-            const serviceType = card.classList[1]; // web-dev, ecommerce, vb.
-            const modal = document.getElementById(`${serviceType}Modal`);
+            const service = card.querySelector('.service-title').textContent;
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
             
-            if (modal) {
-                closeAllModals();
-                modal.classList.add('active');
-            } else {
-                // Modal yoksa mesaj inputuna yaz
-                const service = card.querySelector('.service-title').textContent;
-                const messageInput = document.getElementById('messageInput');
-                messageInput.value = `${service} hizmetiniz hakkında bilgi almak istiyorum.`;
-                messageInput.focus();
+            messageInput.value = `${service} hizmetiniz hakkında bilgi almak istiyorum.`;
+            messageInput.focus();
+            
+            // Mesaj inputu dolu olduğunda send butonunu aktif et
+            if (messageInput.value.trim() !== '') {
+                sendButton.disabled = false;
             }
         });
     });

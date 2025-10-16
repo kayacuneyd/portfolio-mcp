@@ -10,13 +10,29 @@
     gap: 16px;
     overflow-x: auto;
     padding: 8px 4px 16px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    cursor: grab;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) var(--bg-secondary);
 }
 
 .services-scroll::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+}
+
+.services-scroll::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 3px;
+}
+
+.services-scroll::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 3px;
+}
+
+.services-scroll:active {
+    cursor: grabbing;
 }
 
 .service-card {
