@@ -356,15 +356,54 @@ function autoResizeTextarea() {
 // Service card interactions
 function initializeServiceCards() {
     const serviceButtons = document.querySelectorAll('.service-button');
+    const serviceModals = document.querySelectorAll('.service-modal');
+    const modalCloseButtons = document.querySelectorAll('.service-modal-close');
+
+    // Modal kapatma fonksiyonu
+    function closeAllModals() {
+        serviceModals.forEach(modal => modal.classList.remove('active'));
+    }
+
+    // Detaylı bilgi butonları
     serviceButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const card = this.closest('.service-card');
-            const service = card.querySelector('.service-title').textContent;
-            const messageInput = document.getElementById('messageInput');
-            messageInput.value = `${service} hizmetiniz hakkında bilgi almak istiyorum.`;
-            messageInput.focus();
+            const serviceType = card.classList[1]; // web-dev, ecommerce, vb.
+            const modal = document.getElementById(`${serviceType}Modal`);
+            
+            if (modal) {
+                closeAllModals();
+                modal.classList.add('active');
+            } else {
+                // Modal yoksa mesaj inputuna yaz
+                const service = card.querySelector('.service-title').textContent;
+                const messageInput = document.getElementById('messageInput');
+                messageInput.value = `${service} hizmetiniz hakkında bilgi almak istiyorum.`;
+                messageInput.focus();
+            }
         });
+    });
+
+    // Modal kapatma butonları
+    modalCloseButtons.forEach(button => {
+        button.addEventListener('click', closeAllModals);
+    });
+
+    // Modalın dışına tıklandığında kapanması
+    serviceModals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAllModals();
+            }
+        });
+    });
+
+    // ESC tuşu ile modalın kapanması
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllModals();
+        }
     });
 }
 
