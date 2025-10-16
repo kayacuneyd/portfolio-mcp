@@ -12,6 +12,8 @@ class InteractivePortfolio {
             await this.loadBootstrap();
             this.setupEventListeners();
             this.updateWelcomeTime();
+            // Ensure composer padding is correct on startup
+            this.updateComposerPadding();
         } catch (error) {
             console.error('Initialization error:', error);
             this.showError('Uygulama başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
@@ -131,7 +133,10 @@ class InteractivePortfolio {
     setupEventListeners() {
         // Message input
         const messageInput = document.getElementById('messageInput');
-        messageInput.addEventListener('input', () => this.updateSendButton());
+        messageInput.addEventListener('input', () => {
+            this.updateSendButton();
+            this.updateComposerPadding();
+        });
         messageInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
 
         // Send button
@@ -148,6 +153,13 @@ class InteractivePortfolio {
 
         // Global keyboard shortcuts
         document.addEventListener('keydown', (e) => this.handleGlobalKeyDown(e));
+
+        // Update composer padding on resize (debounced)
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => this.updateComposerPadding(), 150);
+        });
 
         // Lead form
         const leadForm = document.getElementById('leadForm');
