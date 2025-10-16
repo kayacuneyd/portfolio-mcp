@@ -619,21 +619,34 @@ function initializeServiceCards() {
     serviceModals.forEach((modal) => modal.classList.remove("active"));
   }
 
-  // Detaylı bilgi butonları
-  serviceButtons.forEach((button) => {
-    button.addEventListener("click", function (e) {
-      e.preventDefault();
-      const card = this.closest(".service-card");
-      const service = card.querySelector(".service-title").textContent;
-      const messageInput = document.getElementById("messageInput");
-      const sendButton = document.getElementById("sendButton");
+  // Make the whole service card clickable and keyboard-accessible
+  const serviceCards = document.querySelectorAll('.service-card');
+  serviceCards.forEach((card) => {
+    // Click handler: simulate selecting a ready question into the composer
+    const activateCard = (e) => {
+      // If the click originated from an interactive control inside the card (like a link), ignore
+      const interactive = e && e.target && (e.target.closest('a') || e.target.closest('button'));
+      if (interactive && e.type === 'click') return;
+
+      const service = card.querySelector('.service-title')?.textContent || card.getAttribute('aria-label') || 'Hizmet';
+      const messageInput = document.getElementById('messageInput');
+      const sendButton = document.getElementById('sendButton');
 
       messageInput.value = `${service} hizmetiniz hakkında bilgi almak istiyorum.`;
       messageInput.focus();
-
-      // Mesaj inputu dolu olduğunda send butonunu aktif et
-      if (messageInput.value.trim() !== "") {
+      // Activate send button
+      if (messageInput.value.trim() !== '') {
         sendButton.disabled = false;
+      }
+    };
+
+    card.addEventListener('click', activateCard);
+
+    // Keyboard accessibility: Enter or Space activates the card
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activateCard(e);
       }
     });
   });

@@ -71,6 +71,31 @@
     overflow: hidden;
 }
 
+.service-card:focus {
+    outline: 3px solid rgba(59,130,246,0.18); /* soft blue focus ring */
+    box-shadow: 0 6px 20px rgba(59,130,246,0.12);
+}
+
+/* Simple tooltip shown on hover for desktop to improve discoverability */
+.service-card[data-tooltip]:hover::after,
+.service-card[data-tooltip]:focus::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(17,24,39,0.95);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    margin-bottom: 8px;
+    z-index: 10;
+    opacity: 1;
+}
+
 .service-card::before {
     content: '';
     position: absolute;
