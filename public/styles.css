@@ -431,6 +431,13 @@ body {
     border-top: 1px solid var(--border-color);
     background-color: var(--bg-primary);
     margin-top: auto;
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    z-index: 150;
 }
 
 .footer p {
