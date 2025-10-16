@@ -353,7 +353,24 @@ function autoResizeTextarea() {
 }
 
 // Initialize app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+// Service card interactions
+function initializeServiceCards() {
+    const serviceButtons = document.querySelectorAll('.service-button');
+    serviceButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const card = this.closest('.service-card');
+            const service = card.querySelector('.service-title').textContent;
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value = `${service} hizmetiniz hakkında bilgi almak istiyorum.`;
+            messageInput.focus();
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize service cards
+    initializeServiceCards();
     new InteractivePortfolio();
     
     // Setup textarea auto-resize

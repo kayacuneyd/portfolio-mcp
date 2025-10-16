@@ -1,0 +1,91 @@
+/* Services Section Styles */
+.services-container {
+    padding: 16px;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.services-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 8px 4px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.services-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.service-card {
+    flex: 0 0 auto;
+    width: 200px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent-color);
+}
+
+.service-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    color: var(--accent-color);
+}
+
+.service-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.service-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.service-button {
+    font-size: 14px;
+    color: var(--accent-color);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.service-button:hover {
+    text-decoration: underline;
+}
+
+/* Service Categories */
+.service-card.web-dev { --category-color: #3b82f6; }
+.service-card.ecommerce { --category-color: #10b981; }
+.service-card.ai-chatbot { --category-color: #8b5cf6; }
+.service-card.ui-ux { --category-color: #f59e0b; }
+.service-card.digital-marketing { --category-color: #ef4444; }
+
+.service-card:hover .service-icon {
+    background-color: var(--category-color);
+    color: white;
+}
