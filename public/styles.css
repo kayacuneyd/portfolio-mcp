@@ -226,10 +226,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    height: 450px;
+    /* Make the messages area take available vertical space and be scrollable */
+    flex: 1 1 auto;
+    min-height: 0; /* important for flex children to allow overflow */
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--accent-color) var(--bg-secondary);
+    /* Add bottom padding so last messages are not hidden under the fixed composer */
+    padding-bottom: 140px;
 }
 
 .messages-container::-webkit-scrollbar {
@@ -315,23 +319,24 @@ body {
 /* Composer - Mobile First */
 .composer {
     position: fixed;
-    bottom: 55px;
+    bottom: 20px; /* keep space for footer */
     left: 0;
     right: 0;
     width: 100%;
-    background-color: var(--bg-primary);
-    border-top: 1px solid var(--border-color);
+    background-color: transparent;
     padding: 12px 16px;
-    z-index: 50;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
 }
 
 @media (min-width: 768px) {
     .composer {
         position: fixed;
-        bottom: 55px;
+        bottom: 24px;
         left: 50%;
         transform: translateX(-50%);
-        width: 100%;
+        width: calc(100% - 32px);
         max-width: 480px;
     }
 }
