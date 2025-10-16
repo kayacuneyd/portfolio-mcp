@@ -47,11 +47,14 @@ body {
     color: var(--text-primary);
     line-height: 1.5;
     font-size: 16px;
-    overflow-x: hidden;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+    margin: 0;
     padding: 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
 }
 
 /* Device Frame */
@@ -59,13 +62,15 @@ body {
     position: relative;
     max-width: 480px;
     margin: 0 auto;
-    min-height: calc(100vh - 40px);
+    height: calc(100vh - 40px);
     background: var(--bg-primary);
     border-radius: 48px;
     box-shadow: 0 0 0 10px var(--bg-secondary),
                 0 20px 40px -20px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     isolation: isolate;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Device Notch */
@@ -235,7 +240,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    height: 350px;
+    height: 450px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--accent-color) var(--bg-secondary);
