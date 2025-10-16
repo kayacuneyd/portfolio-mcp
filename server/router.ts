@@ -164,6 +164,18 @@ router.post('/api/lead', async (req: Request, res: Response) => {
 });
 
 // Health check endpoint
+router.get('/health', (req: Request, res: Response) => {
+  res.json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    nodeVersion: process.version
+  });
+});
+
+// API Health check endpoint
 router.get('/api/health', (req: Request, res: Response) => {
   res.json({ 
     status: 'healthy', 
