@@ -55,23 +55,37 @@ class InteractivePortfolio {
     this.updateElement("profileName", this.config.profile.name);
     this.updateElement("profileTitle", this.config.profile.title);
 
-    // Update profile image if available
-    if (this.config.profile.profile_image) {
-      const profileImage = document.getElementById("profileImage");
-      const avatarPlaceholder = document.getElementById("avatarPlaceholder");
-      if (profileImage && avatarPlaceholder) {
-        // Use onload to ensure we only show the image if it loads successfully
-        profileImage.onload = () => {
-          profileImage.style.display = 'block';
-          avatarPlaceholder.style.display = 'none';
-        };
-        profileImage.onerror = () => {
-          console.warn('Profile image failed to load, keeping placeholder');
-          profileImage.style.display = 'none';
-          avatarPlaceholder.style.display = 'block';
-        };
+    // Update profile image if available. Also support a default <img src="..."> in HTML
+    const profileImage = document.getElementById("profileImage");
+    const avatarPlaceholder = document.getElementById("avatarPlaceholder");
+    if (profileImage && avatarPlaceholder) {
+      const showImage = () => {
+        profileImage.style.display = 'block';
+        avatarPlaceholder.style.display = 'none';
+      };
+      const hideImage = () => {
+        profileImage.style.display = 'none';
+        avatarPlaceholder.style.display = 'block';
+      };
+
+      profileImage.onerror = () => {
+        console.warn('Profile image failed to load, keeping placeholder');
+        hideImage();
+      };
+
+      // If server provided an image URL, set it and use onload to reveal
+      if (this.config.profile.profile_image) {
+        profileImage.onload = showImage;
         // set src last to trigger load events
         profileImage.src = this.config.profile.profile_image;
+      } else if (profileImage.src) {
+        // If an image src is already present in HTML (e.g., your preferred photo),
+        // reveal it if loaded or wait for its onload.
+        if (profileImage.complete && profileImage.naturalWidth > 0) {
+          showImage();
+        } else {
+          profileImage.onload = showImage;
+        }
       }
     }
 
