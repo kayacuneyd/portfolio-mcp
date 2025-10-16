@@ -329,33 +329,23 @@
 
     <script src="/app.min.js" defer></script>
             <script>
-                // Register service worker for offline caching (Workbox)
+                // Unregister old service worker and register new sw-v2 to force immediate update
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('/sw.js').then(reg => {
-                        console.log('Service worker registered:', reg.scope);
-
-                        reg.addEventListener('updatefound', () => {
-                            const newWorker = reg.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // New update available - notify user
-                                    const toast = document.createElement('div');
-                                    toast.textContent = 'Yeni sürüm hazır. Sayfayı yenileyin.';
-                                    toast.style.position = 'fixed';
-                                    toast.style.bottom = '100px';
-                                    toast.style.left = '50%';
-                                    toast.style.transform = 'translateX(-50%)';
-                                    toast.style.background = '#111827';
-                                    toast.style.color = '#fff';
-                                    toast.style.padding = '8px 12px';
-                                    toast.style.borderRadius = '8px';
-                                    toast.style.zIndex = '9999';
-                                    document.body.appendChild(toast);
-                                    setTimeout(() => toast.remove(), 8000);
-                                }
-                            });
+                    // Try to unregister any existing worker first
+                    navigator.serviceWorker.getRegistrations().then((regs) => {
+                        regs.forEach(r => {
+                            try { r.unregister(); } catch (e) { /* ignore */ }
                         });
-                    }).catch(err => console.warn('SW registration failed:', err));
+                    }).finally(() => {
+                        // Register the new versioned worker
+                        navigator.serviceWorker.register('/sw-v2.js').then(reg => {
+                            console.log('sw-v2 registered:', reg.scope);
+                            // If there's a waiting worker, activate it
+                            if (reg.waiting) {
+                                reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                            }
+                        }).catch(err => console.warn('sw-v2 registration failed:', err));
+                    });
                 }
             </script>
 </body>
