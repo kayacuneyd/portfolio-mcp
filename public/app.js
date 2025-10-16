@@ -60,9 +60,18 @@ class InteractivePortfolio {
       const profileImage = document.getElementById("profileImage");
       const avatarPlaceholder = document.getElementById("avatarPlaceholder");
       if (profileImage && avatarPlaceholder) {
+        // Use onload to ensure we only show the image if it loads successfully
+        profileImage.onload = () => {
+          profileImage.style.display = 'block';
+          avatarPlaceholder.style.display = 'none';
+        };
+        profileImage.onerror = () => {
+          console.warn('Profile image failed to load, keeping placeholder');
+          profileImage.style.display = 'none';
+          avatarPlaceholder.style.display = 'block';
+        };
+        // set src last to trigger load events
         profileImage.src = this.config.profile.profile_image;
-        profileImage.style.display = "block";
-        avatarPlaceholder.style.display = "none";
       }
     }
 
