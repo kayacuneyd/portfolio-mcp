@@ -5,13 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn server/index.ts",
-    "build": "tsc && echo 'Build completed successfully'",
-    "start": "node dist/index.js",
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
     "clean": "rm -rf dist",
     "railway:dev": "ts-node-dev --respawn server/index.ts",
     "railway:build": "npm run build",
-    "railway:start": "npm run build && npm start",
-    "prestart": "npm run build"
+    "railway:start": "npm run build && npm start"
   },
   "keywords": ["portfolio", "ai", "chatbot", "interactive"],
   "author": "Cüneyt Kaya",

@@ -12,7 +12,14 @@ import router from './router';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
+
+// Trust proxy for Railway
+app.set('trust proxy', 1);
+
+console.log('🚀 Starting Portfolio MCP server...');
+console.log('📊 Environment:', process.env.NODE_ENV || 'development');
+console.log('🔌 Port:', PORT);
 
 // Security middleware
 app.use(helmet({
@@ -118,13 +125,25 @@ async function startServer() {
     }
     
     // Start server
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Interactive Portfolio server running on port ${PORT}`);
       console.log(`📱 Mobile-first AI portfolio assistant ready`);
       console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔗 Health check: http://localhost:${PORT}/health`);
       
       if (process.env.NODE_ENV !== 'production') {
         console.log(`🔗 Local URL: http://localhost:${PORT}`);
+      }
+    });
+
+    // Handle server errors
+    server.on('error', (error: any) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use`);
+        process.exit(1);
+      } else {
+        console.error('❌ Server error:', error);
+        process.exit(1);
       }
     });
     
