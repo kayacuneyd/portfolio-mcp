@@ -332,8 +332,32 @@ class InteractivePortfolio {
         messageDiv.appendChild(timeDiv);
         messageList.appendChild(messageDiv);
 
-        // Scroll to bottom
-        messageList.scrollTop = messageList.scrollHeight;
+        // Scroll to bottom smoothly but only if user is near bottom
+        this.autoScrollToBottom(messageList);
+    }
+
+    autoScrollToBottom(container) {
+        try {
+            const threshold = 150; // px from bottom to auto-scroll
+            const distanceFromBottom = container.scrollHeight - container.clientHeight - container.scrollTop;
+            if (distanceFromBottom < threshold) {
+                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+            }
+        } catch (e) {
+            // Fallback instant scroll
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    updateComposerPadding() {
+        const composer = document.querySelector('.composer');
+        const messages = document.querySelector('.messages-container');
+        if (!composer || !messages) return;
+        const composerHeight = composer.getBoundingClientRect().height;
+        // set CSS var for composer height so CSS can use it if needed
+        document.documentElement.style.setProperty('--composer-height', `${composerHeight}px`);
+        // ensure messages container has enough bottom padding
+        messages.style.paddingBottom = `${composerHeight + 24}px`;
     }
 
     openLeadModal(data = {}) {
