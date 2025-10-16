@@ -102,8 +102,25 @@ export async function askOpenAI(
 
     return { text, toolCalls };
   } catch (error) {
-    console.error('OpenAI API error:', error);
-    throw new Error('AI yanıtı alınamadı. Lütfen tekrar deneyin.');
+    // Log full error details for server-side debugging (Railway logs)
+    try {
+      console.error('OpenAI API error (full):', error);
+      // If the error contains a response payload (axios-like), log it too
+      // @ts-ignore
+      if (error && error.response && error.response.status) {
+        // @ts-ignore
+        console.error('OpenAI response status:', error.response.status);
+        // @ts-ignore
+        console.error('OpenAI response data:', JSON.stringify(error.response.data));
+      }
+    } catch (logErr) {
+      console.error('Failed to stringify OpenAI error for logging', logErr);
+    }
+
+    // Throw a user-friendly message (we keep the original error.message appended for context)
+    const errAny: any = error;
+    const userMessage = (errAny && errAny.message) ? `AI yanıtı alınamadı. (${errAny.message})` : 'AI yanıtı alınamadı. Lütfen tekrar deneyin.';
+    throw new Error(userMessage);
   }
 }
 

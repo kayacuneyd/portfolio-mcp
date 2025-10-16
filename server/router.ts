@@ -120,8 +120,10 @@ router.post('/api/ask', async (req: Request, res: Response) => {
     
   } catch (error) {
     console.error('Ask endpoint error:', error);
+    const errAny: any = error;
+    const clientMessage = (errAny && errAny.message) ? errAny.message : 'Bir hata oluştu. Lütfen tekrar deneyin.';
     return res.status(500).json({ 
-      error: 'Bir hata oluştu. Lütfen tekrar deneyin.' 
+      error: clientMessage
     });
   }
 });
