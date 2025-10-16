@@ -319,7 +319,7 @@ body {
 /* Composer - Mobile First */
 .composer {
     position: fixed;
-    bottom: 20px; /* keep space for footer */
+    bottom: 30px; /* keep space for footer */
     left: 0;
     right: 0;
     width: 100%;
@@ -539,7 +539,7 @@ body {
 /* Footer - Mobile First */
 .footer {
     position: fixed;
-    bottom: 15px;
+    bottom: 10px;
     left: 0;
     right: 0;
     width: 100%;
