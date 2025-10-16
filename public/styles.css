@@ -57,7 +57,6 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    padding-bottom: 180px; /* Increased space for footer and composer */
 }
 
 /* Header */
@@ -172,9 +171,8 @@ body {
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
-    max-height: calc(100vh - 460px); /* Adjusted to account for footer */
-    min-height: 200px;
-    margin-bottom: 160px; /* Space for footer and composer */
+    height: calc(100vh - 330px);
+    padding-bottom: 140px;
 }
 
 .message {
@@ -245,8 +243,7 @@ body {
     max-width: 480px;
     background-color: var(--bg-primary);
     border-top: 1px solid var(--border-color);
-    padding: 16px;
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    padding: 12px 16px;
     z-index: 200;
 }
 
@@ -427,16 +424,20 @@ body {
 
 /* Footer */
 .footer {
-    padding: 16px;
+    padding: 12px 16px;
     text-align: center;
     border-top: 1px solid var(--border-color);
     background-color: var(--bg-primary);
     position: fixed;
-    bottom: 88px; /* Position above composer */
+    bottom: 70px;
     left: 0;
     right: 0;
     width: 100%;
     z-index: 150;
+    max-width: 480px;
+    margin: 0 auto;
+    transform: translateX(-50%);
+    left: 50%;
 }
 
 .footer p {
