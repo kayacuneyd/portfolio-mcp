@@ -246,7 +246,18 @@ class InteractivePortfolio {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                // Try to parse JSON error from server for better UX
+                let errorBody = null;
+                try {
+                    errorBody = await response.json();
+                } catch (e) {
+                    console.error('Failed to parse error body', e);
+                }
+                const serverMessage = (errorBody && (errorBody.error || errorBody.message)) || `Sunucu hatası: ${response.status}`;
+                console.error('Server responded with error:', response.status, serverMessage, errorBody);
+                // Show server message to user
+                this.addMessage('assistant', `Üzgünüm, bir hata oluştu: ${serverMessage}`, { isError: true });
+                return;
             }
 
             const data = await response.json();
