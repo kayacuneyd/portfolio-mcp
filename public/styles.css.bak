@@ -60,6 +60,8 @@ body {
 }
 
 /* Header */
+
+/* Header */
 .header {
     padding: 16px;
     border-bottom: 1px solid var(--border-color);
@@ -171,8 +173,8 @@ body {
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
-    height: calc(100vh - 280px);
-    padding-bottom: 100px;
+    height: calc(100vh - 330px);
+    padding-bottom: 140px;
 }
 
 .message {
@@ -424,11 +426,12 @@ body {
 
 /* Footer */
 .footer {
-    padding: 8px 16px;
+    padding: 12px 16px;
     text-align: center;
+    border-top: 1px solid var(--border-color);
     background-color: var(--bg-primary);
     position: fixed;
-    bottom: 0;
+    bottom: 70px;
     left: 0;
     right: 0;
     width: 100%;
@@ -437,9 +440,12 @@ body {
     margin: 0 auto;
     transform: translateX(-50%);
     left: 50%;
-    font-size: 12px;
+}
+
+.footer p {
+    font-size: 13px;
     color: var(--text-muted);
-    border-top: 1px solid var(--border-color);
+    margin-bottom: 8px;
 }
 
 .footer a {
@@ -449,6 +455,14 @@ body {
 
 .footer a:hover {
     text-decoration: underline;
+}
+
+.footer-credit {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
 }
 
 .footer-credit strong {
@@ -493,7 +507,7 @@ body {
 /* Responsive Design */
 @media (max-width: 400px) {
     .container {
-        padding-bottom: 70px;
+        padding-bottom: 140px;
     }
     
     .composer {
