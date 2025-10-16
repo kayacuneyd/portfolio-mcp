@@ -3,8 +3,19 @@ class InteractivePortfolio {
     this.config = null;
     this.isLoading = false;
     this.currentLanguage = "tr";
+    // Mock mode for local UI testing. Enable by adding ?mock=true to the URL.
+    try {
+      this.mockMode = new URLSearchParams(window.location.search).get('mock') === 'true';
+    } catch (e) {
+      this.mockMode = false;
+    }
 
     this.init();
+  }
+
+  // Small helper to await delays (used for mock responses / typing simulation)
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async init() {
@@ -250,6 +261,20 @@ class InteractivePortfolio {
     autoResizeTextarea(); // Textarea'yı sıfırla
 
     try {
+      // If mockMode is enabled, simulate a typing placeholder and provide a canned response
+      if (this.mockMode) {
+        const typingEl = this.showTypingPlaceholder();
+        // simulate network/processing delay
+        await this.sleep(600 + Math.floor(Math.random() * 800));
+        this.removeTypingPlaceholder(typingEl);
+        const data = { text: 'Bu, yerel mock cevabıdır. Gerçek OpenAI çağrısı yapılmadı.', leadRequested: false };
+        this.addMessage('assistant', data.text);
+        if (data.leadRequested) {
+          this.openLeadModal(data.leadData || {});
+        }
+        return;
+      }
+
       const response = await fetch("/api/ask", {
         method: "POST",
         headers: {
