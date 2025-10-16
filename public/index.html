@@ -137,8 +137,8 @@
             </div>
         </div>
 
-        <!-- Messages Area -->
-        <div class="messages-container" id="messagesContainer" role="log" aria-live="polite" aria-label="Sohbet geçmişi">
+        <!-- Messages Area (single unified container) -->
+        <div class="messages-container" id="message-list" role="log" aria-live="polite" aria-label="Sohbet geçmişi">
             <div class="message assistant">
                 <div class="message-content">
                     Merhaba! Size nasıl yardımcı olabilirim? Aşağıdaki önerilen sorulardan birini seçebilir veya kendi sorunuzu yazabilirsiniz.
@@ -298,15 +298,10 @@
         </div>
     </div>
 
-    <div class="message-list" id="message-list" role="log" aria-live="polite">
-      <!-- Messages will be appended here -->
-    </div>
-    <div class="loading-indicator" id="loading-indicator" style="display: none;" aria-hidden="true">
-      <div class="spinner"></div>
-    </div>
-    <div class="suggested-commands" id="suggested-commands" aria-label="Önerilen komutlar">
-      <!-- Suggested commands will be appended here -->
-    </div>
+        <!-- Loading indicator (single instance) -->
+        <div class="loading-indicator" id="loading-indicator" style="display: none;" aria-hidden="true">
+            <div class="spinner"></div>
+        </div>
 
     <script src="app.js"></script>
 </body>
