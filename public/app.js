@@ -72,10 +72,24 @@ class InteractivePortfolio {
         scrollContainer.innerHTML = '';
         
         prompts.forEach((prompt, index) => {
-            const chip = document.createElement('div');
+            const chip = document.createElement('button');
             chip.className = 'command-chip';
             chip.textContent = prompt;
+            chip.setAttribute('role', 'button');
+            chip.setAttribute('aria-label', `Hazır komut: ${prompt}`);
+            chip.setAttribute('tabindex', '0');
+            
+            // Click handler
             chip.addEventListener('click', () => this.selectCommand(prompt));
+            
+            // Keyboard handler
+            chip.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.selectCommand(prompt);
+                }
+            });
+            
             scrollContainer.appendChild(chip);
         });
     }
@@ -94,6 +108,24 @@ class InteractivePortfolio {
         messageInput.value = text;
         messageInput.focus();
         this.updateSendButton();
+        
+        // Announce to screen readers
+        this.announceToScreenReader(`Seçilen komut: ${text}`);
+    }
+
+    announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = message;
+        
+        document.body.appendChild(announcement);
+        
+        // Remove after announcement
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 1000);
     }
 
     setupEventListeners() {
@@ -105,6 +137,17 @@ class InteractivePortfolio {
         // Send button
         const sendButton = document.getElementById('sendButton');
         sendButton.addEventListener('click', () => this.sendMessage());
+        
+        // Keyboard support for send button
+        sendButton.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        });
+
+        // Global keyboard shortcuts
+        document.addEventListener('keydown', (e) => this.handleGlobalKeyDown(e));
 
         // Lead form
         const leadForm = document.getElementById('leadForm');
@@ -124,6 +167,18 @@ class InteractivePortfolio {
             this.openModal(privacyModal);
         });
 
+        // Escape key for modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (leadModal.classList.contains('active')) {
+                    this.closeModal(leadModal);
+                }
+                if (privacyModal.classList.contains('active')) {
+                    this.closeModal(privacyModal);
+                }
+            }
+        });
+
         // Close modal on backdrop click
         [leadModal, privacyModal].forEach(modal => {
             modal.addEventListener('click', (e) => {
@@ -132,6 +187,16 @@ class InteractivePortfolio {
                 }
             });
         });
+    }
+
+    handleGlobalKeyDown(e) {
+        // Focus message input with Ctrl/Cmd + K
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            const messageInput = document.getElementById('messageInput');
+            messageInput.focus();
+            this.announceToScreenReader('Mesaj yazma alanına odaklandı');
+        }
     }
 
     updateSendButton() {

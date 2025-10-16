@@ -30,8 +30,8 @@
                 <h2 id="profileName">Yükleniyor...</h2>
                 <p id="profileTitle">Portföy asistanı başlatılıyor</p>
             </div>
-            <a href="mailto:kayacuneyd@gmail.com" class="mail-link" title="Mail gönder">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a href="mailto:kayacuneyd@gmail.com" class="mail-link" title="Mail gönder" aria-label="E-posta ile iletişime geç">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <rect width="20" height="16" x="2" y="4" rx="2"></rect>
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                 </svg>
@@ -44,17 +44,17 @@
         <div class="scroll-progress">
             <div class="scroll-progress-bar"></div>
         </div>
-        <div class="service-card web-dev">
-            <div class="service-icon">
+        <div class="service-card web-dev" role="article" aria-labelledby="web-dev-title">
+            <div class="service-icon" aria-hidden="true">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path>
                         </svg>
                     </div>
-                    <h3 class="service-title">Web Geliştirme</h3>
+                    <h3 class="service-title" id="web-dev-title">Web Geliştirme</h3>
                     <p class="service-description">WordPress ve özel web siteleri geliştirme hizmetleri.</p>
-                    <button class="service-button">
+                    <button class="service-button" aria-label="Web geliştirme hakkında detaylı bilgi al">
                         Detaylı Bilgi
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
                         </svg>
                     </button>
@@ -138,7 +138,7 @@
         </div>
 
         <!-- Messages Area -->
-        <div class="messages-container" id="messagesContainer">
+        <div class="messages-container" id="messagesContainer" role="log" aria-live="polite" aria-label="Sohbet geçmişi">
             <div class="message assistant">
                 <div class="message-content">
                     Merhaba! Size nasıl yardımcı olabilirim? Aşağıdaki önerilen sorulardan birini seçebilir veya kendi sorunuzu yazabilirsiniz.
@@ -154,24 +154,31 @@
                     <h3>İletişim Bilgilerinizi Paylaşın</h3>
                     <button class="modal-close" id="modalClose">&times;</button>
                 </div>
-                <form id="leadForm">
+                <form id="leadForm" role="form" aria-labelledby="lead-form-title">
                     <div class="form-group">
                         <label for="leadName">Adınız (İsteğe bağlı)</label>
-                        <input type="text" id="leadName" name="name" placeholder="Adınız">
+                        <input type="text" id="leadName" name="name" placeholder="Adınız" aria-describedby="name-help">
+                        <div id="name-help" class="sr-only">İsteğe bağlı alan, boş bırakabilirsiniz</div>
                     </div>
                     <div class="form-group">
                         <label for="leadEmail">E-posta Adresiniz *</label>
-                        <input type="email" id="leadEmail" name="email" required placeholder="ornek@email.com">
+                        <input type="email" id="leadEmail" name="email" required placeholder="ornek@email.com" 
+                               aria-describedby="email-help" aria-required="true">
+                        <div id="email-help" class="sr-only">Geçerli bir e-posta adresi girin, zorunlu alan</div>
                     </div>
                     <div class="form-group">
                         <label for="leadTopic">Konu</label>
-                        <input type="text" id="leadTopic" name="topic" placeholder="Proje, randevu, teklif vb.">
+                        <input type="text" id="leadTopic" name="topic" placeholder="Proje, randevu, teklif vb." aria-describedby="topic-help">
+                        <div id="topic-help" class="sr-only">Hangi konuda yardım istediğinizi belirtin</div>
                     </div>
                     <div class="form-group">
                         <label for="leadMessage">Mesajınız</label>
-                        <textarea id="leadMessage" name="message" rows="3" placeholder="Projeniz hakkında detay verebilirsiniz..."></textarea>
+                        <textarea id="leadMessage" name="message" rows="3" placeholder="Projeniz hakkında detay verebilirsiniz..." 
+                                  aria-describedby="message-detail-help"></textarea>
+                        <div id="message-detail-help" class="sr-only">Projeniz hakkında detaylı bilgi verebilirsiniz</div>
                     </div>
-                    <button type="submit" class="submit-btn">Gönder</button>
+                    <button type="submit" class="submit-btn" aria-describedby="submit-help">Gönder</button>
+                    <div id="submit-help" class="sr-only">Formu göndermek için tıklayın</div>
                 </form>
             </div>
         </div>
@@ -183,12 +190,16 @@
                     id="messageInput" 
                     placeholder="Mesajınızı yazın..." 
                     rows="1"
-                    maxlength="1000"></textarea>
-                <button id="sendButton" type="button" disabled>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    maxlength="1000"
+                    aria-label="Mesaj yazma alanı"
+                    aria-describedby="message-help"></textarea>
+                <div id="message-help" class="sr-only">Maksimum 1000 karakter yazabilirsiniz</div>
+                <button id="sendButton" type="button" disabled aria-label="Mesajı gönder" aria-describedby="send-help">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M18.3333 1.66669L9.16667 10.8334M18.3333 1.66669L12.5 18.3334L9.16667 10.8334M18.3333 1.66669L1.66667 7.50002L9.16667 10.8334" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
+                <div id="send-help" class="sr-only">Enter tuşu ile de mesajınızı gönderebilirsiniz</div>
             </div>
         </div>
 
