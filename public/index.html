@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="services.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Preload critical CSS for faster render -->
+    <link rel="preload" href="/styles.css" as="style">
+    <link rel="preload" href="/services.css" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Preload main script early to improve TTI -->
+    <link rel="preload" href="/app.js" as="script">
 </head>
 <body>
     <div class="container">
@@ -19,7 +24,7 @@
         <!-- Profile Card -->
         <div class="profile-card" id="profileCard">
             <div class="avatar">
-                <img id="profileImage" src="" alt="Profile photo" style="display: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                <img id="profileImage" src="" alt="Profile photo" loading="lazy" style="display: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
                 <div class="avatar-placeholder" id="avatarPlaceholder">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>

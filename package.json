@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn server/index.ts",
-    "build": "npx tsc",
+    "build:css": "postcss public/styles.css -o public/styles.min.css --env production",
+    "build:js": "terser public/app.js -o public/app.min.js --compress --mangle",
+    "build": "npm run build:css && npm run build:js && npx tsc",
     "start": "node dist/index.js",
     "clean": "rm -rf dist",
     "test:build": "npm run build && echo 'Build successful' && ls -la dist/",
@@ -32,6 +34,11 @@
     "@types/nodemailer": "^6.4.14",
     "@types/node": "^20.8.10",
     "ts-node-dev": "^2.0.0"
+  ,
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "terser": "^5.20.0"
   },
   "engines": {
     "node": ">=18.0.0",
