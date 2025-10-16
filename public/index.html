@@ -264,7 +264,7 @@
                     <h3>Örnek Projeler</h3>
                     <div class="example-list">
                         <div class="example-item">
-                            <img src="https://picsum.photos/seed/1/400/200" alt="Proje örneği" class="example-image">
+                            <img src="https://picsum.photos/seed/1/400/200" alt="Proje örneği" class="example-image" loading="lazy">
                             <div class="example-content">
                                 <h4>E-ticaret Sitesi</h4>
                                 <p>Modern ve kullanıcı dostu bir online alışveriş deneyimi.</p>
@@ -303,6 +303,7 @@
             <div class="spinner"></div>
         </div>
 
-    <script src="app.js"></script>
+    <link rel="preload" href="/app.js" as="script">
+    <script src="app.js" defer></script>
 </body>
 </html>

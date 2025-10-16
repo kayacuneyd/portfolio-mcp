@@ -64,7 +64,7 @@ app.set('trust proxy', 1);
 
 // Static files serving (for production)
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(process.cwd(), 'public')));
+  app.use(express.static(path.join(process.cwd(), 'public'), { maxAge: '7d' }));
 }
 
 // API routes
@@ -72,7 +72,7 @@ app.use('/', router);
 
 // Serve static files in development
 if (process.env.NODE_ENV !== 'production') {
-  app.use(express.static(path.join(process.cwd(), 'public')));
+  app.use(express.static(path.join(process.cwd(), 'public'), { maxAge: '1h' }));
 }
 
 // Catch-all handler for SPA (in production)
