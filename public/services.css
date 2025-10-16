@@ -63,12 +63,13 @@
     width: 200px;
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 16px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+    padding: 10px 12px; /* reduced padding for compactness */
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    min-height: 64px; /* keep compact height */
 }
 
 .service-card:focus {
@@ -120,16 +121,16 @@
 }
 
 .service-icon {
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
     background-color: var(--bg-tertiary);
-    border-radius: var(--radius-sm);
-    display: flex;
+    border-radius: 8px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 12px;
+    margin: 0 8px 0 0; /* icon inline with title */
     color: var(--accent-color);
-    transition: all 0.3s ease;
+    transition: all 0.18s ease;
     position: relative;
 }
 
@@ -148,11 +149,12 @@
 }
 
 .service-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 8px;
-    transition: color 0.3s ease;
+    margin: 0; /* title sits inline with icon */
+    transition: color 0.18s ease;
+    display: inline-block;
 }
 
 .service-card:hover .service-title {
@@ -160,10 +162,10 @@
 }
 
 .service-description {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-secondary);
-    margin-bottom: 12px;
-    line-height: 1.4;
+    margin-top: 6px;
+    line-height: 1.2;
 }
 
 .service-button {
@@ -171,14 +173,17 @@
     color: var(--accent-color);
     background: none;
     border: none;
-    padding: 8px 0;
-    min-height: 44px;
+    padding: 0;
+    min-height: 28px;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 4px;
-    transition: all 0.3s ease;
+    transition: all 0.18s ease;
     touch-action: manipulation;
+    position: absolute;
+    right: 8px;
+    top: 10px;
 }
 
 .service-button svg {
