@@ -63,8 +63,8 @@ body {
     background: var(--bg-primary);
     overflow: hidden;
     isolation: isolate;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto; /* header, profile, services, commands, messages, composer */
 }
 
 /* Responsive Container Sizes */
@@ -232,8 +232,8 @@ body {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--accent-color) var(--bg-secondary);
-    /* Add bottom padding so last messages are not hidden under the fixed composer */
-    padding-bottom: 140px;
+    /* No extra bottom padding needed with grid+sticky composer */
+    padding-bottom: 0;
 }
 
 .messages-container::-webkit-scrollbar {
@@ -347,10 +347,10 @@ body {
 
 /* Composer - Mobile First */
 .composer {
-    position: fixed;
-    bottom: 30px; /* keep space for footer */
-    left: 0;
-    right: 0;
+    position: sticky;
+    bottom: 24px; /* keep space for footer */
+    left: auto;
+    right: auto;
     width: 100%;
     background-color: transparent;
     padding: 12px 16px;
@@ -361,18 +361,18 @@ body {
 
 @media (min-width: 768px) {
     .composer {
-        position: fixed;
+        position: sticky;
         bottom: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: calc(100% - 32px);
-        max-width: 480px;
+        left: auto;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
     }
 }
 
 @media (min-width: 1024px) {
     .composer {
-        max-width: 600px;
+        max-width: 100%;
     }
 }
 
@@ -567,8 +567,8 @@ body {
 
 /* Footer - Mobile First */
 .footer {
-    position: fixed;
-    bottom: 10px;
+    position: sticky;
+    bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
@@ -580,7 +580,7 @@ body {
 
 /* Add extra space under the main container so composer won't overlap the footer */
 .container {
-    padding-bottom: 90px;
+    padding-bottom: 0;
 }
 
 @media (min-width: 768px) {

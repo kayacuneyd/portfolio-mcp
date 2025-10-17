@@ -6,14 +6,14 @@
     <meta name="description" content="Interactive Portfolio - AI destekli portföy asistanı">
     <title>Interactive Portfolio</title>
         <!-- Critical CSS: inline minimal above-the-fold styles to improve LCP -->
-        <style id="critical-css">/* Critical: header, profile card, messages container, composer */
+        <style id="critical-css">/* Critical: header, profile card, services, commands, messages, composer */
             :root{--bg-primary:#ffffff;--bg-secondary:#f8fafc;--accent-color:#3b82f6;--text-primary:#1e293b;--border-color:#e2e8f0}
             html,body{height:100%;background:#f1f5f9;margin:0}
-            .container{width:100%;height:100vh;display:flex;flex-direction:column;background:var(--bg-primary)}
+            .container{width:100%;height:100vh;display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr) auto;background:var(--bg-primary)}
             .header{padding:16px;border-bottom:1px solid var(--border-color);background:var(--bg-primary)}
             .profile-card{display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);min-height:72px}
-            .messages-container{padding:16px;flex:1 1 auto;min-height:0;overflow-y:auto}
-            .composer{position:fixed;bottom:30px;left:0;right:0;padding:12px 16px;display:flex;justify-content:center}
+            .messages-container{padding:16px;min-height:0;overflow-y:auto}
+            .composer{position:sticky;bottom:0;padding:12px 16px;display:flex;justify-content:center}
             .composer-inner{display:flex;align-items:center;gap:12px;background:var(--bg-secondary);padding:12px;border-radius:12px}
             #messageInput{flex:1;border:none;background:none;outline:none;font-family:Inter,system-ui,Arial}
         </style>
