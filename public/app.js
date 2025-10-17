@@ -462,17 +462,9 @@ class InteractivePortfolio {
   }
 
   updateComposerPadding() {
-    const composer = document.querySelector(".composer");
-    const messages = document.querySelector(".messages-container");
-    if (!composer || !messages) return;
-    const composerHeight = composer.getBoundingClientRect().height;
-    // set CSS var for composer height so CSS can use it if needed
-    document.documentElement.style.setProperty(
-      "--composer-height",
-      `${composerHeight}px`
-    );
-    // ensure messages container has enough bottom padding
-    messages.style.paddingBottom = `${composerHeight + 24}px`;
+    // With CSS Grid and sticky composer, runtime padding adjustments are unnecessary.
+    // This method remains for backward compatibility and does nothing now.
+    return;
   }
 
   openLeadModal(data = {}) {
