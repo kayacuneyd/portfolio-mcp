@@ -33,7 +33,18 @@
 <body>
     <div class="container">
         <!-- Header -->
-        <header class="header"></header>
+        <header class="header">
+            <div class="hero">
+                <div class="hero-content">
+                    <strong class="hero-line">Hızlı, güvenilir web çözümleri — Projeniz için teklif alın.</strong>
+                    <p class="hero-sub">Teknik danışmanlık, uygulama geliştirme ve strateji — küçük ekip, büyük etki.</p>
+                </div>
+                <div class="hero-actions">
+                    <button id="primaryCta" class="primary-cta" type="button" aria-label="Teklif Al">Teklif Al</button>
+                    <a href="#" class="secondary-cta" aria-label="Örnek İşler">Örnek İşler</a>
+                </div>
+            </div>
+        </header>
 
         <!-- Profile Card -->
         <div class="profile-card" id="profileCard">
@@ -172,13 +183,13 @@
         </div>
 
         <!-- Lead Form Modal -->
-        <div class="modal" id="leadModal">
+        <div class="modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>İletişim Bilgilerinizi Paylaşın</h3>
+                    <h3 id="leadModalTitle">İletişim Bilgilerinizi Paylaşın</h3>
                     <button class="modal-close" id="modalClose">&times;</button>
                 </div>
-                <form id="leadForm" role="form" aria-labelledby="lead-form-title">
+                <form id="leadForm" role="form" aria-labelledby="leadModalTitle">
                     <div class="form-group">
                         <label for="leadName">Adınız (İsteğe bağlı)</label>
                         <input type="text" id="leadName" name="name" placeholder="Adınız" aria-describedby="name-help">
@@ -201,7 +212,11 @@
                                   aria-describedby="message-detail-help"></textarea>
                         <div id="message-detail-help" class="sr-only">Projeniz hakkında detaylı bilgi verebilirsiniz</div>
                     </div>
-                    <button type="submit" class="submit-btn" aria-describedby="submit-help">Gönder</button>
+                    <div id="leadFormFeedback" class="form-feedback" role="alert" aria-live="assertive" style="display:none"></div>
+                    <button type="submit" class="submit-btn" aria-describedby="submit-help">
+                        <span class="btn-text">Teklif İste</span>
+                        <span class="btn-spinner" aria-hidden="true" style="display:none"></span>
+                    </button>
                     <div id="submit-help" class="sr-only">Formu göndermek için tıklayın</div>
                 </form>
             </div>

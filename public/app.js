@@ -239,6 +239,33 @@ class InteractivePortfolio {
     });
   }
 
+  // Basic focus trap for modals: keep Tab within modal when open
+  trapFocus(modal) {
+    const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusable = Array.from(modal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null);
+    if (focusable.length === 0) return null;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    const handleKey = (e) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) { // shift + tab
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else { // tab
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    modal.addEventListener('keydown', handleKey);
+    return () => modal.removeEventListener('keydown', handleKey);
+  }
+
   handleGlobalKeyDown(e) {
     // Focus message input with Ctrl/Cmd + K
     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
@@ -466,12 +493,16 @@ class InteractivePortfolio {
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
 
-    // Focus first input if it's the lead modal
+    // Focus first input if it's the lead modal and hide background from screen readers
     if (modal.id === "leadModal") {
       setTimeout(() => {
         const firstInput = modal.querySelector("input");
         if (firstInput) firstInput.focus();
       }, 100);
+      const container = document.querySelector('.container');
+      if (container) container.setAttribute('aria-hidden', 'true');
+      // install focus trap
+      this._removeTrap = this.trapFocus(modal);
     }
   }
 
@@ -482,6 +513,9 @@ class InteractivePortfolio {
     // Clear form if it's the lead modal
     if (modal.id === "leadModal") {
       document.getElementById("leadForm").reset();
+      const container = document.querySelector('.container');
+      if (container) container.removeAttribute('aria-hidden');
+      if (this._removeTrap) { this._removeTrap(); this._removeTrap = null; }
     }
   }
 
@@ -496,6 +530,24 @@ class InteractivePortfolio {
       message: formData.get("message") || undefined,
     };
 
+    const submitBtn = e.target.querySelector('.submit-btn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnSpinner = submitBtn.querySelector('.btn-spinner');
+    const feedbackEl = document.getElementById('leadFormFeedback');
+
+    // Basic client-side validation
+    if (!leadData.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(leadData.email)) {
+      feedbackEl.textContent = 'Lütfen geçerli bir e-posta adresi girin.';
+      feedbackEl.classList.add('error');
+      feedbackEl.style.display = 'block';
+      return;
+    }
+
+    // Show spinner + disable
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnSpinner.style.display = 'inline-block';
+
     try {
       const response = await fetch("/api/lead", {
         method: "POST",
@@ -506,7 +558,10 @@ class InteractivePortfolio {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        let body = null;
+        try { body = await response.json(); } catch (err) { /* ignore */ }
+        const msg = (body && (body.error || body.message)) || `HTTP ${response.status}`;
+        throw new Error(msg);
       }
 
       this.closeModal(document.getElementById("leadModal"));
@@ -514,9 +569,21 @@ class InteractivePortfolio {
         "assistant",
         "Teşekkürler! Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağım."
       );
+      // show success feedback briefly
+      feedbackEl.textContent = 'Mesajınız gönderildi.';
+      feedbackEl.classList.remove('error');
+      feedbackEl.style.display = 'block';
+      setTimeout(() => { feedbackEl.style.display = 'none'; }, 3000);
     } catch (error) {
       console.error("Lead submission error:", error);
-      alert("Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.");
+      feedbackEl.textContent = `Gönderilemedi: ${error.message || 'Sunucu hatası'}`;
+      feedbackEl.classList.add('error');
+      feedbackEl.style.display = 'block';
+    } finally {
+      // restore button state
+      submitBtn.disabled = false;
+      btnText.style.display = 'inline';
+      btnSpinner.style.display = 'none';
     }
   }
 
@@ -723,7 +790,13 @@ function initializeCommandsScroll() {
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize service cards
   initializeServiceCards();
-  new InteractivePortfolio();
+  const app = new InteractivePortfolio();
+
+  // Primary CTA opens lead modal
+  const primaryCta = document.getElementById('primaryCta');
+  if (primaryCta) {
+    primaryCta.addEventListener('click', () => app.openLeadModal());
+  }
 
   // Initialize commands scroll
   initializeCommandsScroll();
