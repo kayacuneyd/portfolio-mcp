@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Interactive Portfolio</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" href="/logo.svg" />
+  </head>
+  <body>
+    <header class="header">
+      <img src="/logo.svg" alt="logo" class="logo" />
+      <h1>Interactive Portfolio</h1>
+    </header>
+
+    <section id="profile" class="profile-card" aria-live="polite"></section>
+
+    <section class="chips" id="chips" aria-label="Önerilen komutlar"></section>
+
+    <main id="messages" class="messages" aria-live="polite"></main>
+
+    <form id="composerForm" class="composer" autocomplete="off">
+      <textarea id="composer" rows="1" placeholder="Sorunuzu yazın..." required></textarea>
+      <button id="sendBtn" type="submit">Gönder</button>
+    </form>
+
+    <footer class="footer">
+      <a href="#" id="kvkk">KVKK/GDPR Bilgilendirmesi</a>
+    </footer>
+
+    <dialog id="leadModal">
+      <form method="dialog" id="leadForm">
+        <h3>İletişim / Teklif</h3>
+        <label>Ad Soyad
+          <input name="name" type="text" maxlength="120" />
+        </label>
+        <label>E-posta*
+          <input name="email" type="email" required />
+        </label>
+        <label>Konu
+          <input name="topic" type="text" maxlength="120" />
+        </label>
+        <label>Mesaj
+          <textarea name="message" rows="4" maxlength="2000"></textarea>
+        </label>
+        <menu>
+          <button value="cancel">Vazgeç</button>
+          <button id="leadSubmit" value="default">Gönder</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
