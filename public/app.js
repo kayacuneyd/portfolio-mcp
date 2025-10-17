@@ -55,37 +55,23 @@ class InteractivePortfolio {
     this.updateElement("profileName", this.config.profile.name);
     this.updateElement("profileTitle", this.config.profile.title);
 
-    // Update profile image if available. Also support a default <img src="..."> in HTML
-    const profileImage = document.getElementById("profileImage");
-    const avatarPlaceholder = document.getElementById("avatarPlaceholder");
-    if (profileImage && avatarPlaceholder) {
-      const showImage = () => {
-        profileImage.style.display = 'block';
-        avatarPlaceholder.style.display = 'none';
-      };
-      const hideImage = () => {
-        profileImage.style.display = 'none';
-        avatarPlaceholder.style.display = 'block';
-      };
-
-      profileImage.onerror = () => {
-        console.warn('Profile image failed to load, keeping placeholder');
-        hideImage();
-      };
-
-      // If server provided an image URL, set it and use onload to reveal
-      if (this.config.profile.profile_image) {
-        profileImage.onload = showImage;
+    // Update profile image if available
+    if (this.config.profile.profile_image) {
+      const profileImage = document.getElementById("profileImage");
+      const avatarPlaceholder = document.getElementById("avatarPlaceholder");
+      if (profileImage && avatarPlaceholder) {
+        // Use onload to ensure we only show the image if it loads successfully
+        profileImage.onload = () => {
+          profileImage.style.display = 'block';
+          avatarPlaceholder.style.display = 'none';
+        };
+        profileImage.onerror = () => {
+          console.warn('Profile image failed to load, keeping placeholder');
+          profileImage.style.display = 'none';
+          avatarPlaceholder.style.display = 'block';
+        };
         // set src last to trigger load events
         profileImage.src = this.config.profile.profile_image;
-      } else if (profileImage.src) {
-        // If an image src is already present in HTML (e.g., your preferred photo),
-        // reveal it if loaded or wait for its onload.
-        if (profileImage.complete && profileImage.naturalWidth > 0) {
-          showImage();
-        } else {
-          profileImage.onload = showImage;
-        }
       }
     }
 
@@ -237,33 +223,6 @@ class InteractivePortfolio {
         }
       });
     });
-  }
-
-  // Basic focus trap for modals: keep Tab within modal when open
-  trapFocus(modal) {
-    const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    const focusable = Array.from(modal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null);
-    if (focusable.length === 0) return null;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    const handleKey = (e) => {
-      if (e.key !== 'Tab') return;
-      if (e.shiftKey) { // shift + tab
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else { // tab
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    modal.addEventListener('keydown', handleKey);
-    return () => modal.removeEventListener('keydown', handleKey);
   }
 
   handleGlobalKeyDown(e) {
@@ -462,9 +421,17 @@ class InteractivePortfolio {
   }
 
   updateComposerPadding() {
-    // With CSS Grid and sticky composer, runtime padding adjustments are unnecessary.
-    // This method remains for backward compatibility and does nothing now.
-    return;
+    const composer = document.querySelector(".composer");
+    const messages = document.querySelector(".messages-container");
+    if (!composer || !messages) return;
+    const composerHeight = composer.getBoundingClientRect().height;
+    // set CSS var for composer height so CSS can use it if needed
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      `${composerHeight}px`
+    );
+    // ensure messages container has enough bottom padding
+    messages.style.paddingBottom = `${composerHeight + 24}px`;
   }
 
   openLeadModal(data = {}) {
@@ -485,16 +452,12 @@ class InteractivePortfolio {
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
 
-    // Focus first input if it's the lead modal and hide background from screen readers
+    // Focus first input if it's the lead modal
     if (modal.id === "leadModal") {
       setTimeout(() => {
         const firstInput = modal.querySelector("input");
         if (firstInput) firstInput.focus();
       }, 100);
-      const container = document.querySelector('.container');
-      if (container) container.setAttribute('aria-hidden', 'true');
-      // install focus trap
-      this._removeTrap = this.trapFocus(modal);
     }
   }
 
@@ -505,9 +468,6 @@ class InteractivePortfolio {
     // Clear form if it's the lead modal
     if (modal.id === "leadModal") {
       document.getElementById("leadForm").reset();
-      const container = document.querySelector('.container');
-      if (container) container.removeAttribute('aria-hidden');
-      if (this._removeTrap) { this._removeTrap(); this._removeTrap = null; }
     }
   }
 
@@ -522,24 +482,6 @@ class InteractivePortfolio {
       message: formData.get("message") || undefined,
     };
 
-    const submitBtn = e.target.querySelector('.submit-btn');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const btnSpinner = submitBtn.querySelector('.btn-spinner');
-    const feedbackEl = document.getElementById('leadFormFeedback');
-
-    // Basic client-side validation
-    if (!leadData.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(leadData.email)) {
-      feedbackEl.textContent = 'Lütfen geçerli bir e-posta adresi girin.';
-      feedbackEl.classList.add('error');
-      feedbackEl.style.display = 'block';
-      return;
-    }
-
-    // Show spinner + disable
-    submitBtn.disabled = true;
-    btnText.style.display = 'none';
-    btnSpinner.style.display = 'inline-block';
-
     try {
       const response = await fetch("/api/lead", {
         method: "POST",
@@ -550,10 +492,7 @@ class InteractivePortfolio {
       });
 
       if (!response.ok) {
-        let body = null;
-        try { body = await response.json(); } catch (err) { /* ignore */ }
-        const msg = (body && (body.error || body.message)) || `HTTP ${response.status}`;
-        throw new Error(msg);
+        throw new Error(`HTTP ${response.status}`);
       }
 
       this.closeModal(document.getElementById("leadModal"));
@@ -561,21 +500,9 @@ class InteractivePortfolio {
         "assistant",
         "Teşekkürler! Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağım."
       );
-      // show success feedback briefly
-      feedbackEl.textContent = 'Mesajınız gönderildi.';
-      feedbackEl.classList.remove('error');
-      feedbackEl.style.display = 'block';
-      setTimeout(() => { feedbackEl.style.display = 'none'; }, 3000);
     } catch (error) {
       console.error("Lead submission error:", error);
-      feedbackEl.textContent = `Gönderilemedi: ${error.message || 'Sunucu hatası'}`;
-      feedbackEl.classList.add('error');
-      feedbackEl.style.display = 'block';
-    } finally {
-      // restore button state
-      submitBtn.disabled = false;
-      btnText.style.display = 'inline';
-      btnSpinner.style.display = 'none';
+      alert("Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.");
     }
   }
 
@@ -645,36 +572,12 @@ function initializeServiceCards() {
 
   const servicesScroll = document.querySelector(".services-scroll");
 
-  // Pointer events (covers mouse, touch, pen)
-  const onPointerDown = (e) => {
+  servicesScroll.addEventListener("mousedown", (e) => {
     isDown = true;
     servicesScroll.style.cursor = "grabbing";
-    startX = (e.clientX ?? e.pageX) - servicesScroll.offsetLeft;
+    startX = e.pageX - servicesScroll.offsetLeft;
     scrollLeft = servicesScroll.scrollLeft;
-    try { servicesScroll.setPointerCapture?.(e.pointerId); } catch (_) {}
-  };
-  const onPointerMove = (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = (e.clientX ?? e.pageX) - servicesScroll.offsetLeft;
-    const walk = (x - startX) * 2;
-    servicesScroll.scrollLeft = scrollLeft - walk;
-    // Progress bar güncelleme
-    updateScrollProgress(servicesScroll);
-  };
-  const onPointerUp = (e) => {
-    isDown = false;
-    servicesScroll.style.cursor = "grab";
-    try { servicesScroll.releasePointerCapture?.(e.pointerId); } catch (_) {}
-  };
-
-  servicesScroll.addEventListener("pointerdown", onPointerDown);
-  window.addEventListener("pointermove", onPointerMove);
-  window.addEventListener("pointerup", onPointerUp);
-  window.addEventListener("pointercancel", onPointerUp);
-
-  // Mouse fallback (older browsers)
-  servicesScroll.addEventListener("mousedown", onPointerDown);
+  });
 
   servicesScroll.addEventListener("mouseleave", () => {
     isDown = false;
@@ -686,7 +589,16 @@ function initializeServiceCards() {
     servicesScroll.style.cursor = "grab";
   });
 
-  servicesScroll.addEventListener("mousemove", onPointerMove);
+  servicesScroll.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - servicesScroll.offsetLeft;
+    const walk = (x - startX) * 2;
+    servicesScroll.scrollLeft = scrollLeft - walk;
+
+    // Progress bar güncelleme
+    updateScrollProgress(servicesScroll);
+  });
 
   // Progress bar fonksiyonu
   function updateScrollProgress(container) {
@@ -768,33 +680,12 @@ function initializeCommandsScroll() {
   let startX;
   let scrollLeft;
 
-  const commandsPointerDown = (e) => {
+  commandsScroll.addEventListener("mousedown", (e) => {
     isDown = true;
     commandsScroll.style.cursor = "grabbing";
-    startX = (e.clientX ?? e.pageX) - commandsScroll.offsetLeft;
+    startX = e.pageX - commandsScroll.offsetLeft;
     scrollLeft = commandsScroll.scrollLeft;
-    try { commandsScroll.setPointerCapture?.(e.pointerId); } catch (_) {}
-  };
-  const commandsPointerMove = (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = (e.clientX ?? e.pageX) - commandsScroll.offsetLeft;
-    const walk = (x - startX) * 2;
-    commandsScroll.scrollLeft = scrollLeft - walk;
-  };
-  const commandsPointerUp = (e) => {
-    isDown = false;
-    commandsScroll.style.cursor = "grab";
-    try { commandsScroll.releasePointerCapture?.(e.pointerId); } catch (_) {}
-  };
-
-  commandsScroll.addEventListener("pointerdown", commandsPointerDown);
-  window.addEventListener("pointermove", commandsPointerMove);
-  window.addEventListener("pointerup", commandsPointerUp);
-  window.addEventListener("pointercancel", commandsPointerUp);
-
-  // Mouse fallback
-  commandsScroll.addEventListener("mousedown", commandsPointerDown);
+  });
 
   commandsScroll.addEventListener("mouseleave", () => {
     isDown = false;
@@ -806,19 +697,19 @@ function initializeCommandsScroll() {
     commandsScroll.style.cursor = "grab";
   });
 
-  commandsScroll.addEventListener("mousemove", commandsPointerMove);
+  commandsScroll.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - commandsScroll.offsetLeft;
+    const walk = (x - startX) * 2;
+    commandsScroll.scrollLeft = scrollLeft - walk;
+  });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize service cards
   initializeServiceCards();
-  const app = new InteractivePortfolio();
-
-  // Primary CTA opens lead modal
-  const primaryCta = document.getElementById('primaryCta');
-  if (primaryCta) {
-    primaryCta.addEventListener('click', () => app.openLeadModal());
-  }
+  new InteractivePortfolio();
 
   // Initialize commands scroll
   initializeCommandsScroll();
