@@ -6,14 +6,14 @@
     <meta name="description" content="Interactive Portfolio - AI destekli portföy asistanı">
     <title>Interactive Portfolio</title>
         <!-- Critical CSS: inline minimal above-the-fold styles to improve LCP -->
-        <style id="critical-css">/* Critical: header, profile card, services, commands, messages, composer */
+        <style id="critical-css">/* Critical: header, profile card, messages container, composer */
             :root{--bg-primary:#ffffff;--bg-secondary:#f8fafc;--accent-color:#3b82f6;--text-primary:#1e293b;--border-color:#e2e8f0}
             html,body{height:100%;background:#f1f5f9;margin:0}
-            .container{width:100%;height:100vh;display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr) auto;background:var(--bg-primary)}
+            .container{width:100%;height:100vh;display:flex;flex-direction:column;background:var(--bg-primary)}
             .header{padding:16px;border-bottom:1px solid var(--border-color);background:var(--bg-primary)}
             .profile-card{display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);min-height:72px}
-            .messages-container{padding:16px;min-height:0;overflow-y:auto}
-            .composer{position:sticky;bottom:0;padding:12px 16px;display:flex;justify-content:center}
+            .messages-container{padding:16px;flex:1 1 auto;min-height:0;overflow-y:auto}
+            .composer{position:fixed;bottom:30px;left:0;right:0;padding:12px 16px;display:flex;justify-content:center}
             .composer-inner{display:flex;align-items:center;gap:12px;background:var(--bg-secondary);padding:12px;border-radius:12px}
             #messageInput{flex:1;border:none;background:none;outline:none;font-family:Inter,system-ui,Arial}
         </style>
@@ -25,16 +25,20 @@
     <link rel="preload" href="/styles.css" as="style">
     <link rel="preload" href="/services.css" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- main script will be loaded dynamically; keep single CSS source to avoid conflicts -->
+    <!-- main script will be loaded dynamically; do not preload to avoid unused-preload warnings -->
+    <!-- Use minified assets when available (created by build scripts) -->
+    <link rel="stylesheet" href="/styles.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/styles.css"></noscript>
 </head>
 <body>
     <div class="container">
-        <!-- Header (moved below profile card) -->
+        <!-- Header -->
+        <header class="header"></header>
 
         <!-- Profile Card -->
         <div class="profile-card" id="profileCard">
             <div class="avatar">
-                <img id="profileImage" src="https://kayacuneyt.com/assets/images/kayacuneyt.jpeg" alt="Profile photo" loading="lazy" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                <img id="profileImage" src="https://kayacuneyt.com/assets/images/kayacuneyt.jpeg" alt="Profile photo" loading="lazy" style="display: none; width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
                 <div class="avatar-placeholder" id="avatarPlaceholder">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
@@ -53,21 +57,6 @@
             </a>
         </div>
 
-        <!-- Header (hero placed below profile card) -->
-        <header class="header">
-            <div class="hero">
-                <div class="hero-content">
-                    <strong class="hero-line">Hızlı, güvenilir web çözümleri — Projeniz için teklif alın.</strong>
-                    <p class="hero-sub">Teknik danışmanlık, uygulama geliştirme ve strateji — küçük ekip, büyük etki.</p>
-                </div>
-                <div class="hero-actions">
-                    <button id="primaryCta" class="primary-cta" type="button" aria-label="Teklif Al">Teklif Al</button>
-                    <a href="#" class="secondary-cta" aria-label="Örnek İşler">Örnek İşler</a>
-                </div>
-                <div class="hero-meta">Ortalama yanıt süresi: 24 saat · Gizlilik önceliğimizdir</div>
-            </div>
-        </header>
-
         <!-- Services Section -->
         <div class="services-container">
             <div class="services-scroll">
@@ -75,32 +64,28 @@
             <div class="scroll-progress-bar"></div>
         </div>
     <div class="service-card web-dev" role="button" aria-labelledby="web-dev-title" aria-label="Web Geliştirme hakkında bilgi al" data-tooltip="Bilgi al" tabindex="0">
-            <div class="service-header" style="display:flex;align-items:center;">
-                <div class="service-icon" aria-hidden="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path>
-                    </svg>
+            <div class="service-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path>
+                        </svg>
+                    </div>
+                    <h3 class="service-title" id="web-dev-title">Web Geliştirme</h3>
+                    <p class="service-description">WordPress ve özel web siteleri geliştirme hizmetleri.</p>
+                    <button class="service-button" aria-label="Web geliştirme hakkında detaylı bilgi al">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </button>
                 </div>
-                <h3 class="service-title" id="web-dev-title">Web Geliştirme</h3>
-            </div>
-            <p class="service-description">WordPress ve özel web siteleri geliştirme hizmetleri.</p>
-            <button class="service-button" aria-label="Web geliştirme hakkında detaylı bilgi al">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
-                </svg>
-            </button>
-        </div>
 
                 <div class="service-card ecommerce" role="button" aria-label="E-ticaret hakkında bilgi al" data-tooltip="Bilgi al" tabindex="0">
-                    <div class="service-header" style="display:flex;align-items:center;">
-                        <div class="service-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle>
-                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">E-ticaret</h3>
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle>
+                            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                        </svg>
                     </div>
+                    <h3 class="service-title">E-ticaret</h3>
                     <p class="service-description">Online mağaza ve e-ticaret çözümleri.</p>
                     <button class="service-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -110,16 +95,14 @@
                 </div>
 
                 <div class="service-card ai-chatbot" role="button" aria-label="AI Chatbot hakkında bilgi al" data-tooltip="Bilgi al" tabindex="0">
-                    <div class="service-header" style="display:flex;align-items:center;">
-                        <div class="service-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2"></path>
-                                <path d="M12 8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2v-4c0-1.1-.9-2-2-2Z"></path>
-                                <path d="M12 16v2"></path><path d="M12 6v2"></path>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">AI Chatbot</h3>
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2"></path>
+                            <path d="M12 8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2v-4c0-1.1-.9-2-2-2Z"></path>
+                            <path d="M12 16v2"></path><path d="M12 6v2"></path>
+                        </svg>
                     </div>
+                    <h3 class="service-title">AI Chatbot</h3>
                     <p class="service-description">Yapay zeka destekli chatbot entegrasyonları.</p>
                     <button class="service-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -129,14 +112,12 @@
                 </div>
 
                 <div class="service-card ui-ux" role="button" aria-label="UI/UX Tasarım hakkında bilgi al" data-tooltip="Bilgi al" tabindex="0">
-                    <div class="service-header" style="display:flex;align-items:center;">
-                        <div class="service-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">UI/UX Tasarım</h3>
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
                     </div>
+                    <h3 class="service-title">UI/UX Tasarım</h3>
                     <p class="service-description">Kullanıcı deneyimi ve arayüz tasarımı.</p>
                     <button class="service-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -146,15 +127,13 @@
                 </div>
 
                 <div class="service-card digital-marketing" role="button" aria-label="Digital Marketing hakkında bilgi al" data-tooltip="Bilgi al" tabindex="0">
-                    <div class="service-header" style="display:flex;align-items:center;">
-                        <div class="service-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12"></path>
-                                <circle cx="17" cy="7" r="5"></circle>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">Digital Marketing</h3>
+                    <div class="service-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12"></path>
+                            <circle cx="17" cy="7" r="5"></circle>
+                        </svg>
                     </div>
+                    <h3 class="service-title">Digital Marketing</h3>
                     <p class="service-description">SEO ve dijital pazarlama stratejileri.</p>
                     <button class="service-button">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -183,13 +162,13 @@
         </div>
 
         <!-- Lead Form Modal -->
-        <div class="modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle">
+        <div class="modal" id="leadModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 id="leadModalTitle">İletişim Bilgilerinizi Paylaşın</h3>
+                    <h3>İletişim Bilgilerinizi Paylaşın</h3>
                     <button class="modal-close" id="modalClose">&times;</button>
                 </div>
-                <form id="leadForm" role="form" aria-labelledby="leadModalTitle">
+                <form id="leadForm" role="form" aria-labelledby="lead-form-title">
                     <div class="form-group">
                         <label for="leadName">Adınız (İsteğe bağlı)</label>
                         <input type="text" id="leadName" name="name" placeholder="Adınız" aria-describedby="name-help">
@@ -212,11 +191,7 @@
                                   aria-describedby="message-detail-help"></textarea>
                         <div id="message-detail-help" class="sr-only">Projeniz hakkında detaylı bilgi verebilirsiniz</div>
                     </div>
-                    <div id="leadFormFeedback" class="form-feedback" role="alert" aria-live="assertive" style="display:none"></div>
-                    <button type="submit" class="submit-btn" aria-describedby="submit-help">
-                        <span class="btn-text">Teklif İste</span>
-                        <span class="btn-spinner" aria-hidden="true" style="display:none"></span>
-                    </button>
+                    <button type="submit" class="submit-btn" aria-describedby="submit-help">Gönder</button>
                     <div id="submit-help" class="sr-only">Formu göndermek için tıklayın</div>
                 </form>
             </div>
@@ -342,25 +317,35 @@
             <div class="spinner"></div>
         </div>
 
-    <script src="/app.js" defer></script>
+    <script src="/app.min.js" defer></script>
             <script>
-                // Unregister old service worker and register new sw-v2 to force immediate update
+                // Register service worker for offline caching (Workbox)
                 if ('serviceWorker' in navigator) {
-                    // Try to unregister any existing worker first
-                    navigator.serviceWorker.getRegistrations().then((regs) => {
-                        regs.forEach(r => {
-                            try { r.unregister(); } catch (e) { /* ignore */ }
+                    navigator.serviceWorker.register('/sw.js').then(reg => {
+                        console.log('Service worker registered:', reg.scope);
+
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New update available - notify user
+                                    const toast = document.createElement('div');
+                                    toast.textContent = 'Yeni sürüm hazır. Sayfayı yenileyin.';
+                                    toast.style.position = 'fixed';
+                                    toast.style.bottom = '100px';
+                                    toast.style.left = '50%';
+                                    toast.style.transform = 'translateX(-50%)';
+                                    toast.style.background = '#111827';
+                                    toast.style.color = '#fff';
+                                    toast.style.padding = '8px 12px';
+                                    toast.style.borderRadius = '8px';
+                                    toast.style.zIndex = '9999';
+                                    document.body.appendChild(toast);
+                                    setTimeout(() => toast.remove(), 8000);
+                                }
+                            });
                         });
-                    }).finally(() => {
-                        // Register the new versioned worker
-                        navigator.serviceWorker.register('/sw-v2.js').then(reg => {
-                            console.log('sw-v2 registered:', reg.scope);
-                            // If there's a waiting worker, activate it
-                            if (reg.waiting) {
-                                reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-                            }
-                        }).catch(err => console.warn('sw-v2 registration failed:', err));
-                    });
+                    }).catch(err => console.warn('SW registration failed:', err));
                 }
             </script>
 </body>

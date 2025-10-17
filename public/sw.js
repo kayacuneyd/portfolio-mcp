@@ -10,10 +10,10 @@ if (workbox) {
 
   // Precache basic app shell. Keep revisions updated on deploy if assets change.
   workbox.precaching.precacheAndRoute([
-    { url: '/', revision: 'v2' },
-    { url: '/index.html', revision: 'v2' },
-    { url: '/styles.min.css', revision: 'v2' },
-    { url: '/app.min.js', revision: 'v2' }
+    { url: '/', revision: 'v1' },
+    { url: '/index.html', revision: 'v1' },
+    { url: '/styles.min.css', revision: 'v1' },
+    { url: '/app.min.js', revision: 'v1' }
   ]);
 
   // App shell routing for SPA navigation
