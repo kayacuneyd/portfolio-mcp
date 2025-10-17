@@ -16,11 +16,13 @@ if (workbox) {
     event.waitUntil(self.clients.claim());
   });
 
+  // Bump revision to v3 and precache non-minified assets actually used by index.html
   workbox.precaching.precacheAndRoute([
-    { url: '/', revision: 'v2' },
-    { url: '/index.html', revision: 'v2' },
-    { url: '/styles.min.css', revision: 'v2' },
-    { url: '/app.min.js', revision: 'v2' }
+    { url: '/', revision: 'v3' },
+    { url: '/index.html', revision: 'v3' },
+    { url: '/styles.css', revision: 'v3' },
+    { url: '/services.css', revision: 'v3' },
+    { url: '/app.js', revision: 'v3' }
   ]);
 
   // Images: cache-first
