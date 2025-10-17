@@ -45,59 +45,28 @@ sk-your-actual-openai-api-key-here
 **Webhook için (opsiyonel):**
 - `LEAD_WEBHOOK_URL`
 
-## ☁️ Vercel'e Deploy
+## ☁️ Railway'e Deploy
 
-### Yöntem 1: Vercel CLI (Hızlı)
+### Railway CLI ile
 
 ```bash
-# Vercel CLI yükle
-npm i -g vercel
+# Railway CLI yükle
+npm i -g @railway/cli
 
 # Login
-vercel login
+railway login
 
-# Deploy
-vercel
+# Projeyi bağla (mevcut projeyi seç veya yeni oluştur)
+railway link
 
-# Production deploy
-vercel --prod
+# Build ve deploy
+railway up
 ```
 
-### Yöntem 2: Vercel Dashboard (Tavsiye edilen)
-
-1. [vercel.com](https://vercel.com) 'a gidin
-2. **Import Project** tıklayın
-3. GitHub repository'nizi seçin
-4. **Environment Variables** ekleyin:
-   - `OPENAI_API_KEY`: OpenAI API key'iniz
-   - `MODEL_DEFAULT`: `gpt-4o-mini`
-   - `NODE_ENV`: `production`
-   - (Opsiyonel) E-posta ayarları
-
-5. **Deploy** tıklayın
-
-### Yöntem 3: GitHub Actions ile Otomatik Deploy
-
-#### Vercel Token Alın:
-1. Vercel Dashboard > **Settings** > **Tokens**
-2. **Create Token** 
-3. Token'ı kopyalayın
-
-#### GitHub'da Vercel Secrets Ekleyin:
-```
-VERCEL_TOKEN: <your-vercel-token>
-VERCEL_ORG_ID: <your-org-id>
-VERCEL_PROJECT_ID: <your-project-id>
-```
-
-**Org ID ve Project ID'yi bulmak için:**
-```bash
-vercel link
-cat .vercel/project.json
-```
-
-#### Her Push'da Otomatik Deploy:
-`.github/workflows/deploy.yml` dosyası hazır! Her `main` branch'e push'da otomatik deploy olacak.
+### Gerekli Ayarlar
+- Environment Variables: `.env`'deki değerleri Railway Proje Ayarları > Variables bölümüne ekleyin.
+- Start Command: `package.json`'daki `railway:start` komutunu kullanın veya "Start Command" alanına `npm run railway:start` yazın.
+- Health Check: `railway.json` dosyasındaki `healthcheckPath` `/health` olarak ayarlı.
 
 ## 🔒 Güvenlik Kontrol Listesi
 
@@ -132,16 +101,10 @@ LEAD_WEBHOOK_URL=https://hooks.zapier.com/...
 FRONTEND_URL=https://yourdomain.com
 ```
 
-## 🌐 Custom Domain (Vercel)
+## 🌐 Custom Domain (Railway)
 
-1. Vercel Dashboard > **Settings** > **Domains**
-2. Domain adınızı ekleyin
-3. DNS kayıtlarını güncelleyin:
-   ```
-   Type: CNAME
-   Name: @
-   Value: cname.vercel-dns.com
-   ```
+1. Railway Project > **Settings** > **Domains**
+2. Domain ekleyin ve verilen DNS kayıtlarını sağlayıcınıza tanımlayın
 
 ## 📱 Test Etme
 

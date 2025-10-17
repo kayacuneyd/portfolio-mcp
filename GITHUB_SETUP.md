@@ -91,54 +91,21 @@ Google Sheets veya Zapier gibi servislere lead göndermek için:
 
 ---
 
-### 4. Vercel'e Deploy Edin
+### 4. Railway ile Deploy Edin
 
-#### Yöntem A: Vercel Dashboard (Kolay)
-
-1. **https://vercel.com** adresine gidin
-2. **Import Project** tıklayın
-3. GitHub repository'nizi seçin: `portfolio-mcp`
-4. **Environment Variables** ekleyin:
+1. **https://railway.app** adresine gidin
+2. Yeni proje oluşturun veya mevcut projeyi açın
+3. GitHub repository'nizi bağlayın: `portfolio-mcp`
+4. **Variables** bölümüne environment variables ekleyin:
    - `OPENAI_API_KEY`: OpenAI key'iniz
-   - `MODEL_DEFAULT`: `gpt-5-mini`
-   - `NODE_ENV`: `production`
    - (Opsiyonel) E-posta ayarları
-5. **Deploy** tıklayın
-6. 2-3 dakika içinde yayında!
-
-#### Yöntem B: Vercel CLI
-
-```bash
-# Vercel CLI yükle (ilk kez kullanıyorsanız)
-npm i -g vercel
-
-# Login
-vercel login
-
-# Production deploy
-vercel --prod
-```
+5. Deploy: `railway up` veya Railway dashboard üzerinden
 
 ---
 
-### 5. GitHub Actions ile Otomatik Deploy (Opsiyonel)
+### 5. GitHub Actions
 
-Her `main` branch'e push'da otomatik deploy için:
-
-1. **Vercel Token alın:**
-   - Vercel Dashboard > Settings > Tokens
-   - Create Token > Kopyalayın
-
-2. **GitHub Secrets'a ekleyin:**
-   - `VERCEL_TOKEN`: Vercel token'ınız
-   - `VERCEL_ORG_ID`: Vercel org ID
-   - `VERCEL_PROJECT_ID`: Project ID
-
-> Org ID ve Project ID bulmak için:
-> ```bash
-> vercel link
-> cat .vercel/project.json
-> ```
+Vercel otomatik deploy workflow'u kaldırıldı. Railway için GitHub Actions kullanmak isterseniz, Railway’in resmi action’ını ekleyebilirsiniz.
 
 ---
 

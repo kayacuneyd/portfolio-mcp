@@ -122,19 +122,27 @@ allowed_topics:
 
 ## 🚀 Dağıtım
 
-### Vercel (Önerilen)
+> Not: Vercel entegrasyonu kaldırıldı. Üretim dağıtımları için Railway önerilmektedir.
 
-1. Vercel CLI'yi yükleyin:
+### Railway (Önerilen)
+
+1. Railway CLI'yi yükleyin:
 ```bash
-npm i -g vercel
+npm i -g @railway/cli
 ```
 
-2. Projeyi dağıtın:
+2. Giriş yapın ve projeyi bağlayın:
 ```bash
-vercel
+railway login
+railway link
 ```
 
-3. Çevre değişkenlerini Vercel dashboard'dan ekleyin.
+3. Deploy edin:
+```bash
+railway up
+```
+
+4. Çevre değişkenlerini Railway dashboard'dan ekleyin.
 
 ### Hostinger veya Diğer Node.js Hosting
 
