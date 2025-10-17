@@ -25,10 +25,7 @@
     <link rel="preload" href="/styles.css" as="style">
     <link rel="preload" href="/services.css" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- main script will be loaded dynamically; do not preload to avoid unused-preload warnings -->
-    <!-- Use minified assets when available (created by build scripts) -->
-    <link rel="stylesheet" href="/styles.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/styles.css"></noscript>
+    <!-- main script will be loaded dynamically; keep single CSS source to avoid conflicts -->
 </head>
 <body>
     <div class="container">
@@ -345,7 +342,7 @@
             <div class="spinner"></div>
         </div>
 
-    <script src="/app.min.js" defer></script>
+    <script src="/app.js" defer></script>
             <script>
                 // Unregister old service worker and register new sw-v2 to force immediate update
                 if ('serviceWorker' in navigator) {

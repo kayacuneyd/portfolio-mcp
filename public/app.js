@@ -645,12 +645,36 @@ function initializeServiceCards() {
 
   const servicesScroll = document.querySelector(".services-scroll");
 
-  servicesScroll.addEventListener("mousedown", (e) => {
+  // Pointer events (covers mouse, touch, pen)
+  const onPointerDown = (e) => {
     isDown = true;
     servicesScroll.style.cursor = "grabbing";
-    startX = e.pageX - servicesScroll.offsetLeft;
+    startX = (e.clientX ?? e.pageX) - servicesScroll.offsetLeft;
     scrollLeft = servicesScroll.scrollLeft;
-  });
+    try { servicesScroll.setPointerCapture?.(e.pointerId); } catch (_) {}
+  };
+  const onPointerMove = (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = (e.clientX ?? e.pageX) - servicesScroll.offsetLeft;
+    const walk = (x - startX) * 2;
+    servicesScroll.scrollLeft = scrollLeft - walk;
+    // Progress bar güncelleme
+    updateScrollProgress(servicesScroll);
+  };
+  const onPointerUp = (e) => {
+    isDown = false;
+    servicesScroll.style.cursor = "grab";
+    try { servicesScroll.releasePointerCapture?.(e.pointerId); } catch (_) {}
+  };
+
+  servicesScroll.addEventListener("pointerdown", onPointerDown);
+  window.addEventListener("pointermove", onPointerMove);
+  window.addEventListener("pointerup", onPointerUp);
+  window.addEventListener("pointercancel", onPointerUp);
+
+  // Mouse fallback (older browsers)
+  servicesScroll.addEventListener("mousedown", onPointerDown);
 
   servicesScroll.addEventListener("mouseleave", () => {
     isDown = false;
@@ -662,16 +686,7 @@ function initializeServiceCards() {
     servicesScroll.style.cursor = "grab";
   });
 
-  servicesScroll.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - servicesScroll.offsetLeft;
-    const walk = (x - startX) * 2;
-    servicesScroll.scrollLeft = scrollLeft - walk;
-
-    // Progress bar güncelleme
-    updateScrollProgress(servicesScroll);
-  });
+  servicesScroll.addEventListener("mousemove", onPointerMove);
 
   // Progress bar fonksiyonu
   function updateScrollProgress(container) {
@@ -753,12 +768,33 @@ function initializeCommandsScroll() {
   let startX;
   let scrollLeft;
 
-  commandsScroll.addEventListener("mousedown", (e) => {
+  const commandsPointerDown = (e) => {
     isDown = true;
     commandsScroll.style.cursor = "grabbing";
-    startX = e.pageX - commandsScroll.offsetLeft;
+    startX = (e.clientX ?? e.pageX) - commandsScroll.offsetLeft;
     scrollLeft = commandsScroll.scrollLeft;
-  });
+    try { commandsScroll.setPointerCapture?.(e.pointerId); } catch (_) {}
+  };
+  const commandsPointerMove = (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = (e.clientX ?? e.pageX) - commandsScroll.offsetLeft;
+    const walk = (x - startX) * 2;
+    commandsScroll.scrollLeft = scrollLeft - walk;
+  };
+  const commandsPointerUp = (e) => {
+    isDown = false;
+    commandsScroll.style.cursor = "grab";
+    try { commandsScroll.releasePointerCapture?.(e.pointerId); } catch (_) {}
+  };
+
+  commandsScroll.addEventListener("pointerdown", commandsPointerDown);
+  window.addEventListener("pointermove", commandsPointerMove);
+  window.addEventListener("pointerup", commandsPointerUp);
+  window.addEventListener("pointercancel", commandsPointerUp);
+
+  // Mouse fallback
+  commandsScroll.addEventListener("mousedown", commandsPointerDown);
 
   commandsScroll.addEventListener("mouseleave", () => {
     isDown = false;
@@ -770,13 +806,7 @@ function initializeCommandsScroll() {
     commandsScroll.style.cursor = "grab";
   });
 
-  commandsScroll.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - commandsScroll.offsetLeft;
-    const walk = (x - startX) * 2;
-    commandsScroll.scrollLeft = scrollLeft - walk;
-  });
+  commandsScroll.addEventListener("mousemove", commandsPointerMove);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
