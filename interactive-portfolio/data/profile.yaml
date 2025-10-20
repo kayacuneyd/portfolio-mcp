@@ -1,0 +1,22 @@
+name: "Cüneyt Kaya"
+title: "Web Developer & Digital Solutions"
+location: "Stuttgart, Germany"
+languages: ["tr", "en", "de"]
+services:
+  - name: "Kişisel/kurumsal web sitesi"
+  - name: "WordPress tema & ACF geliştirme"
+  - name: "AI Chatbot entegrasyonu"
+work_hours: "Hafta içi 10:00–18:00 CET"
+min_budget_eur: 800
+typical_timeline: "Basit landing 5–7 gün, kurumsal site 2–4 hafta"
+contact:
+  email: "info@kayacuneyt.com"
+  website: "https://kayacuneyt.com"
+allowed_topics:
+  - "hizmet"
+  - "ücret"
+  - "süre"
+  - "çalışma yöntemi"
+  - "randevu"
+  - "teklif"
+  - "projeler"
